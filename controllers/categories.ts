@@ -12,8 +12,6 @@ const getCategories = async (req: Request, res: Response): Promise<Response> => 
             collection: {
                 hasItems: categories.length > 0 ? true : false,
                 items: categories,
-                page: 1,
-                pages: 1,
                 total: categories.length
             }
         })

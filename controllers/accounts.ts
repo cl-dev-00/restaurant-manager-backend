@@ -2,18 +2,34 @@ import { Request, Response } from "express";
 import { Account, Employee, MenuItem, Order } from "../models";
 
 const getAccounts = async (req: Request, res: Response): Promise<Response> => {
-
+    
     try {
-
-        const accounts = await Account.findAll();
+        
+        const accountAttributes: string[] = ['idCuenta', 'nombreCliente', 'fechaCuenta', 'done', 'comentarios'];
+        const orderAttributes: string[] = ['idPedido', 'cantidad', 'importe'];
+        const menuItemAttributes: string[] = ['nombre_Item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
+        const employeeAttributes: string[] = ['idEmpleado', 'nombre'];
+        
+        const accounts = await Account.findAll({
+            where: {
+                done: false
+            },
+            attributes: accountAttributes,
+            include: [ {
+                model: Order, attributes: orderAttributes, include: [{
+                    model: MenuItem, attributes: menuItemAttributes
+                }]
+            }, {
+                model: Employee,
+                attributes: employeeAttributes
+            } ]
+        }); 
 
         return res.json({
             ok: true,
             collection: {
                 hasItems: accounts.length > 0 ? true : false,
                 items: accounts,
-                page: 1,
-                pages: 1,
                 total: accounts.length
             }
         });
@@ -31,10 +47,10 @@ const getAccount = async (req: Request, res: Response): Promise<Response> => {
 
     const { id } = req.params;
 
-    const accountAttributes: string[] = ['idCuenta', 'nombreCliente', 'fechaCuenta'];
+    const accountAttributes: string[] = ['idCuenta', 'nombreCliente', 'fechaCuenta', 'done', 'comentarios'];
     const orderAttributes: string[] = ['idPedido', 'cantidad', 'importe'];
     const menuItemAttributes: string[] = ['nombre_Item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
-    const employeeAttributes: string[] = ['nombre'];
+    const employeeAttributes: string[] = ['idEmpleado', 'nombre'];
 
     try {
 

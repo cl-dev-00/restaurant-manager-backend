@@ -63,7 +63,7 @@ Order.init({
     
 });
 
-Order.hasOne(MenuItem, {
+Order.belongsTo(MenuItem, {
     foreignKey: 'id_item_name'
 });
 

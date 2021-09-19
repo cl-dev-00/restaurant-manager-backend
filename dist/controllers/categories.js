@@ -19,8 +19,6 @@ const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             collection: {
                 hasItems: categories.length > 0 ? true : false,
                 items: categories,
-                page: 1,
-                pages: 1,
                 total: categories.length
             }
         });

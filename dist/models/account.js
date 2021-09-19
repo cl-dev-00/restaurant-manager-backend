@@ -23,9 +23,17 @@ Account.init({
         type: sequelize_1.DataTypes.DATE,
         allowNull: false
     },
+    done: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+    },
     idEmpleado: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false
+    },
+    comentarios: {
+        type: sequelize_1.DataTypes.TEXT,
+        allowNull: false,
+        defaultValue: ''
     },
 }, {
     modelName: 'account',

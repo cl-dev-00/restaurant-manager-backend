@@ -13,14 +13,29 @@ exports.deleteAccount = exports.updateAccount = exports.createAccount = exports.
 const models_1 = require("../models");
 const getAccounts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const accounts = yield models_1.Account.findAll();
+        const accountAttributes = ['idCuenta', 'nombreCliente', 'fechaCuenta', 'done', 'comentarios'];
+        const orderAttributes = ['idPedido', 'cantidad', 'importe'];
+        const menuItemAttributes = ['nombre_Item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
+        const employeeAttributes = ['idEmpleado', 'nombre'];
+        const accounts = yield models_1.Account.findAll({
+            where: {
+                done: false
+            },
+            attributes: accountAttributes,
+            include: [{
+                    model: models_1.Order, attributes: orderAttributes, include: [{
+                            model: models_1.MenuItem, attributes: menuItemAttributes
+                        }]
+                }, {
+                    model: models_1.Employee,
+                    attributes: employeeAttributes
+                }]
+        });
         return res.json({
             ok: true,
             collection: {
                 hasItems: accounts.length > 0 ? true : false,
                 items: accounts,
-                page: 1,
-                pages: 1,
                 total: accounts.length
             }
         });
@@ -35,10 +50,10 @@ const getAccounts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getAccounts = getAccounts;
 const getAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const accountAttributes = ['idCuenta', 'nombreCliente', 'fechaCuenta'];
+    const accountAttributes = ['idCuenta', 'nombreCliente', 'fechaCuenta', 'done', 'comentarios'];
     const orderAttributes = ['idPedido', 'cantidad', 'importe'];
     const menuItemAttributes = ['nombre_Item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
-    const employeeAttributes = ['nombre'];
+    const employeeAttributes = ['idEmpleado', 'nombre'];
     try {
         const account = yield models_1.Account.findAll({
             where: {

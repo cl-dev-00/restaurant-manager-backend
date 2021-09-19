@@ -19,8 +19,6 @@ const getMenuItems = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                page: 1,
-                pages: 1,
                 total: menuItems.length
             }
         });
@@ -63,8 +61,6 @@ const getMenuItemsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, f
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                page: 1,
-                pages: 1,
                 total: menuItems.length
             }
         });

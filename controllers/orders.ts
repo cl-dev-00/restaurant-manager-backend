@@ -13,8 +13,6 @@ const getOrders = async (req: Request, res: Response): Promise<Response> => {
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                page: 1,
-                pages: 1,
                 total: orders.length
             }
         });
@@ -45,8 +43,6 @@ const getOrdersByAccount = async (req: Request, res: Response): Promise<Response
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                page: 1,
-                pages: 1,
                 total: orders.length
             }
         });
@@ -73,8 +69,6 @@ const createOrders = async (req: Request, res: Response): Promise<Response> => {
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                page: 1,
-                pages: 1,
                 total: orders.length
             }
         });

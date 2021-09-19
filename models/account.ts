@@ -7,20 +7,24 @@ interface AccountAttributes {
     idCuenta: number,
     nombreCliente: string,
     fechaCuenta: Date,
+    done: Boolean,
     idEmpleado: number,
-
+    comentarios: string,
+    
     deletedAt?: Date,
     updatedAt?: Date,
     createdAt?: Date,
 }
 
-interface AccountInput extends Optional<AccountAttributes, 'idCuenta'> {  }
+interface AccountInput extends Optional<AccountAttributes, 'idCuenta' | 'done'> {  }
 
 class Account extends Model<AccountAttributes, AccountInput> implements AccountAttributes {
     public idCuenta!: number;
     public nombreCliente!: string;
     public fechaCuenta!: Date;
+    public done!: boolean;
     public idEmpleado!: number;
+    public comentarios!: string;
 
     public readonly deletedAt!: Date;
     public readonly updatedAt!: Date;
@@ -41,9 +45,17 @@ Account.init({
         type: DataTypes.DATE,
         allowNull: false
     },
+    done: {
+        type: DataTypes.BOOLEAN,
+    },
     idEmpleado: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    comentarios: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        defaultValue: ''
     },
 }, {
     modelName: 'account',

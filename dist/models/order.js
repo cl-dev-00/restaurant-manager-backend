@@ -36,7 +36,7 @@ Order.init({
     sequelize: connection_1.default,
     paranoid: true
 });
-Order.hasOne(menu_items_1.default, {
+Order.belongsTo(menu_items_1.default, {
     foreignKey: 'id_item_name'
 });
 exports.default = Order;

@@ -19,8 +19,6 @@ const getOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                page: 1,
-                pages: 1,
                 total: orders.length
             }
         });
@@ -46,8 +44,6 @@ const getOrdersByAccount = (req, res) => __awaiter(void 0, void 0, void 0, funct
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                page: 1,
-                pages: 1,
                 total: orders.length
             }
         });
@@ -69,8 +65,6 @@ const createOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                page: 1,
-                pages: 1,
                 total: orders.length
             }
         });

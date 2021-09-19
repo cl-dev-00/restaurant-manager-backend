@@ -13,8 +13,6 @@ const getMenuItems = async (req: Request, res: Response): Promise<Response> => {
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                page: 1,
-                pages: 1,
                 total: menuItems.length
             }
         });
@@ -68,8 +66,6 @@ const getMenuItemsByCategory = async (req: Request, res: Response): Promise<Resp
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                page: 1,
-                pages: 1,
                 total: menuItems.length
             }
         });
