@@ -54,7 +54,7 @@ Account.init({
     },
     comentarios: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
         defaultValue: ''
     },
 }, {
