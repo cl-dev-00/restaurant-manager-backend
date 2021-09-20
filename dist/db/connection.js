@@ -9,6 +9,7 @@ const database = process.env.DB_DATABASE || 'restaurant-manager';
 const db = new sequelize_1.Sequelize(database, username, password, {
     host: host,
     dialect: connection,
+    logging: false
 });
 exports.default = db;
 //# sourceMappingURL=connection.js.map
