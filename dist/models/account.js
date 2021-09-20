@@ -32,7 +32,7 @@ Account.init({
     },
     comentarios: {
         type: sequelize_1.DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
         defaultValue: ''
     },
 }, {

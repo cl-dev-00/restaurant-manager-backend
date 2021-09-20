@@ -1,6 +1,6 @@
 import { Dialect, Sequelize } from 'sequelize';
 
-const connection: Dialect  = (process.env.mariadb as Dialect) || 'mariadb';
+const connection: Dialect  = (process.env.mariadb as Dialect) || 'mysql';
 const host: string = process.env.DB_HOST || 'localhost';
 const username: string = process.env.DB_USERNAME || 'root';
 const password: string = process.env.DB_PASSWORD || '';
