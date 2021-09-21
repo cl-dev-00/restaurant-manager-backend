@@ -9,7 +9,7 @@ const database: string = process.env.DB_DATABASE!;
 const db = new Sequelize(database, username, password, {
     host: host,
     dialect: connection,
-    logging: false
+    // logging: false
 });
 
 
