@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+
 import { accounts, categories, menuItems, orders } from '../routers';
 
 export default class Server {
