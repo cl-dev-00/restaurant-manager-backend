@@ -10,7 +10,7 @@ import {
     createCategory,
     updateCategory,
     deleteCategory,
-} from '../controllers';
+} from '../controllers/categories';
 
 const router = Router();
 

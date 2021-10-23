@@ -1,11 +1,13 @@
 import categories from './categories';
 import menuItems from './menu-items';
-import accounts from './accounts';
 import orders from './orders';
+import orderDetails from './order-details';
+import tables from './tables';
 
 export {
     categories,
     menuItems,
-    accounts,
-    orders
+    orders,
+    orderDetails,
+    tables,
 }

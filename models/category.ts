@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize'
-import sequelizeConnection from '../db/connection'
+import { sequelizeConnection } from '../db/connection'
 
 interface CategoryAttributes {
   idCategoria: number;
@@ -8,7 +8,7 @@ interface CategoryAttributes {
   updatedAt?: Date;
   deletedAt?: Date;
 }
-export interface CategorytInput extends Optional<CategoryAttributes, 'idCategoria'> { }
+interface CategorytInput extends Optional<CategoryAttributes, 'idCategoria'> { }
 // export interface CategoryOuput extends Required<CategoryAttributes> { }
 
 class Category extends Model<CategoryAttributes, CategorytInput> implements CategoryAttributes {

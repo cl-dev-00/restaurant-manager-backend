@@ -1,60 +1,113 @@
 import { Router } from "express";
 import { check } from "express-validator";
 
-import { hasExistAccount, hasExistMenuItem } from '../helpers/db-validators';
+import {
+    getOrdersUndone,
+    getOrdersWithoutPaying,
+    getOrder,
+    createOrder,
+    updateOrder,
+    deleteOrder,
+} from '../controllers/orders';
+import { hasExistOrder, hasExistMenuItem, hasExistComercial } from '../helpers/db-validators';
 import { validFields } from "../middlewares";
 
-import {
-    getOrders,
-    getOrdersByAccount,
-    createOrders,
-    deleteOrders,
-} from '../controllers';
+const router: Router = Router();
 
-const router = Router();
-
-router.get('/', getOrders);
-
-router.get('/:id/account', [
-    check('id').custom(hasExistAccount),
+router.get('/undone/:idComercial', [
+    check('idComercial').custom(hasExistComercial),
     validFields
-], getOrdersByAccount);
+], getOrdersUndone)
+
+router.get('/without-paying/:idComercial', [
+    check('idComercial').custom(hasExistComercial),
+    validFields
+], getOrdersWithoutPaying)
+
+router.get('/:id', [
+    check('id').custom(hasExistOrder),
+    validFields
+], getOrder);
 
 router.post('/', [
-    check('orders')
-    .not().isEmpty()
-    .withMessage('orders es obligatorio')
-    .isArray({ min: 1 })
-    .withMessage('orders debe tener al menos un elemento'),
-    check('orders.*.idCuenta')
-    .not().isEmpty()
-    .withMessage('El id de la cuenta es obligatorio')
-    .isInt()
-    .withMessage('El id de la cuenta debe ser un entero')
-    .custom(hasExistAccount),
-    check('orders.*.id_item_name')
-    .not().isEmpty()
-    .withMessage('El id_item_name es obligatorio')
-    .isInt()
-    .withMessage('El id_item_name debe ser un entero')
-    .custom(hasExistMenuItem),
-    check('orders.*.cantidad')
-    .not().isEmpty()
-    .withMessage('La cantidad es obligatorio')
-    .isInt({ min: 1 })
-    .withMessage('La cantidad debe ser un entero mayor a cero'),
-    check('orders.*.importe')
-    .not().isEmpty()
-    .withMessage('El importe es obligatorio')
-    .isFloat()
-    .withMessage('El importe debe ser un numero flotante'),
+    
+    check('nombreCliente')
+        .not().isEmpty()
+        .withMessage('El nombre del cliente es obligatorio')
+        .isLength({ min: 2 })
+        .withMessage('El nombre debe tener al menos 2 caracteres'),
+    check('fechaOrden')
+        .not().isEmpty()
+        .withMessage('La fecha de la orden es obligatorio'),
+        // .isDate()
+        // .withMessage('fechaOrden debe ser una fecha'),
+    check('idEmpleado')
+        .not().isEmpty()
+        .withMessage('EL id del empleado es obligatorio')
+        .isInt()
+        .withMessage('El id del empleado debe ser un numero entero'),
+    check('idComercial')
+        .not().isEmpty()
+        .withMessage('EL id del comercial es obligatorio')
+        .isInt()
+        .withMessage('El id del comercial debe ser un numero entero'),
+    check('order_details')
+        .not().isEmpty()
+        .withMessage('Los order_details son obligatorios')
+        .isArray({ min: 1 })
+        .withMessage('order_details debe tener al menos un elemento'),
+    check('order_details.*.id_menu_item')
+        .not().isEmpty()
+        .withMessage('El id_menu_item es obligatorio')
+        .isInt()
+        .withMessage('El id_menu_item debe ser un entero')
+        .custom(hasExistMenuItem),
+    check('order_details.*.cantidad')
+        .not().isEmpty()
+        .withMessage('La cantidad es obligatorio')
+        .isInt({ min: 1 })
+        .withMessage('La cantidad debe ser un entero mayor a cero'),
+    check('order_details.*.importe')
+        .not().isEmpty()
+        .withMessage('El importe es obligatorio')
+        .isFloat()
+        .withMessage('El importe debe ser un numero flotante'),
+    check('order_details.*.comentario')
+        .exists()
+        .withMessage('El comentario es obligatorio')
+        .isString()
+        .withMessage('El comentario debe ser una cadena de caracteres'),
     validFields
-], createOrders);
+], createOrder);
 
-router.delete('/', [
-        
-], deleteOrders);
+router.put('/:id', [
+    check('id').custom(hasExistOrder),
+    check('nombreCliente')
+        .not().isEmpty()
+        .withMessage('El nombre del cliente es obligatorio')
+        .isLength({ min: 2 })
+        .withMessage('El nombre debe tener al menos 3 caracteres'),
+    check('fechaOrden')
+        .not().isEmpty()
+        .withMessage('La fecha de la cuenta es obligatorio'),
+        // .isDate()
+        // .withMessage('fechaOrden debe ser una fecha'),
+    check('idEmpleado')
+        .not().isEmpty()
+        .withMessage('EL id del empleado es  obligatorio')
+        .isInt()
+        .withMessage('El id del empleado debe ser un numero entero'),
+    check('idComercial')
+        .not().isEmpty()
+        .withMessage('EL id del comercial es obligatorio')
+        .isInt()
+        .withMessage('El id del comercial debe ser un numero entero'),
+    validFields
+], updateOrder);
 
-
+router.delete('/:id', [
+    check('id').custom(hasExistOrder),
+    validFields
+], deleteOrder);
 
 export default router;

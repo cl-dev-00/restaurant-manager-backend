@@ -1,15 +1,19 @@
 import Category from "./category";
-import Server from "./serve";
+import AppServer from "./serve";
 import MenuItem from "./menu-items";
-import Order from './order';
-import Account from "./account";
+import OrderDetail from './order-detail';
+import Order from "./order";
 import Employee from './employee';
+import Commercial from "./commercial";
+import Table from "./table";
 
 export {
-    Server,
+    AppServer,
     Category,
     MenuItem,
+    OrderDetail,
     Order,
-    Account,
     Employee,
+    Commercial,
+    Table
 }

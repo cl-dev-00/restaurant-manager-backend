@@ -1,10 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const connection_1 = __importDefault(require("../db/connection"));
+const connection_1 = require("../db/connection");
 class Employee extends sequelize_1.Model {
 }
 Employee.init({
@@ -12,6 +9,10 @@ Employee.init({
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
+    },
+    idComercial: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false
     },
     idRol: {
         type: sequelize_1.DataTypes.INTEGER,
@@ -37,6 +38,10 @@ Employee.init({
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
+    apellido: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false
+    },
     url: {
         type: sequelize_1.DataTypes.TEXT,
         allowNull: false
@@ -52,7 +57,7 @@ Employee.init({
 }, {
     modelName: 'employee',
     timestamps: false,
-    sequelize: connection_1.default,
+    sequelize: connection_1.sequelizeConnection,
     paranoid: true
 });
 exports.default = Employee;

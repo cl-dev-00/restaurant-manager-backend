@@ -1,33 +1,35 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import SequelizeConnection from '../db/connection';
+import { sequelizeConnection } from '../db/connection';
 
 interface MenuItemAttributes {
-    id_item_name: number,
-    nombre_Item: string,
+    id_menu_item: number,
+    idCategoria: number,
+    idComercial: number;
+    nombre_item: string,
     precio: number,
-    disponibilidad: number,
+    disponibilidad: boolean,
     detalles_item: string,
     descuento: number,
     url?: string,
-    idCategoria: number,
 
     deletedAt?: Date,
     createdAt?: Date,
     updatedAt?: Date,
 }
 
-interface MenuItemInput extends Optional<MenuItemAttributes, 'id_item_name' | 'url'> { }
-export interface MenuItemOutput extends Optional<MenuItemAttributes, 'url'> {}
+interface MenuItemInput extends Optional<MenuItemAttributes, 'id_menu_item' | 'url'> { }
+export interface MenuItemOutput extends Optional<MenuItemAttributes, 'url'> { }
 
 class MenuItem extends Model<MenuItemAttributes, MenuItemInput> implements MenuItemAttributes {
-    public id_item_name!: number;
-    public nombre_Item!: string;
+    public id_menu_item!: number;
+    public idCategoria!: number;
+    public idComercial!: number;
+    public nombre_item!: string;
     public precio!: number;
-    public disponibilidad!: number;
+    public disponibilidad!: boolean;
     public detalles_item!: string;
     public descuento!: number;
     public url!: string;
-    public idCategoria!: number;
 
     public readonly deletedAt!: Date;
     public readonly createdAt!: Date;
@@ -35,12 +37,20 @@ class MenuItem extends Model<MenuItemAttributes, MenuItemInput> implements MenuI
 }
 
 MenuItem.init({
-    id_item_name: {
+    id_menu_item: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    nombre_Item: {
+    idCategoria: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    idComercial: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    nombre_item: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -49,7 +59,7 @@ MenuItem.init({
         allowNull: false
     },
     disponibilidad: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BOOLEAN,
         allowNull: false
 
     },
@@ -66,14 +76,10 @@ MenuItem.init({
         allowNull: true,
         defaultValue: null
     },
-    idCategoria: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
 }, {
     modelName: 'menu_item',
     timestamps: false,
-    sequelize: SequelizeConnection,
+    sequelize: sequelizeConnection,
     paranoid: true
 });
 

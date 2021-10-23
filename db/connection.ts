@@ -6,11 +6,8 @@ const username: string = process.env.DB_USERNAME!;
 const password: string = process.env.DB_PASSWORD!;
 const database: string = process.env.DB_DATABASE!;
 
-const db = new Sequelize(database, username, password, {
+export const sequelizeConnection = new Sequelize(database, username, password, {
     host: host,
     dialect: connection,
-    // logging: false
+    logging: false
 });
-
-
-export default db;

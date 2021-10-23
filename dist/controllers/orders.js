@@ -8,18 +8,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteOrders = exports.createOrders = exports.getOrdersByAccount = exports.getOrders = void 0;
+exports.sendOrder = exports.deleteOrder = exports.updateOrder = exports.createOrder = exports.getOrder = exports.getOrdersWithoutPaying = exports.getOrdersUndone = void 0;
 const models_1 = require("../models");
-const getOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const OrderAttributes = ['idOrden', 'idComercial', 'nombreCliente', 'fechaOrden', 'done', 'pagado'];
+const OrderDetialAttributes = ['idOrderDetail', 'cantidad', 'importe', 'comentario', 'done'];
+const menuItemAttributes = ['nombre_item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
+const employeeAttributes = ['idEmpleado', 'nombre', 'apellido'];
+const tableAttributes = ['numero'];
+const getOrdersUndone = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { idComercial } = req.params;
     try {
-        const orders = yield models_1.Order.findAll();
+        const Orders = yield models_1.Order.findAll({
+            where: {
+                done: false,
+                idComercial
+            },
+            attributes: OrderAttributes,
+            include: [{
+                    model: models_1.OrderDetail, attributes: OrderDetialAttributes, include: [{
+                            model: models_1.MenuItem, attributes: menuItemAttributes
+                        }]
+                }, {
+                    model: models_1.Employee,
+                    attributes: employeeAttributes
+                }, {
+                    model: models_1.Table,
+                    attributes: tableAttributes
+                }]
+        });
         return res.json({
             ok: true,
             collection: {
-                hasItems: orders.length > 0 ? true : false,
-                items: orders,
-                total: orders.length
+                hasItems: Orders.length > 0 ? true : false,
+                items: Orders,
+                total: Orders.length
             }
         });
     }
@@ -30,22 +64,69 @@ const getOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 });
-exports.getOrders = getOrders;
-const getOrdersByAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getOrdersUndone = getOrdersUndone;
+const getOrdersWithoutPaying = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { idComercial } = req.params;
+    try {
+        const Orders = yield models_1.Order.findAll({
+            where: {
+                done: true,
+                pagado: false,
+                idComercial
+            },
+            attributes: OrderAttributes,
+            include: [{
+                    model: models_1.OrderDetail, attributes: OrderDetialAttributes, include: [{
+                            model: models_1.MenuItem, attributes: menuItemAttributes
+                        }]
+                }, {
+                    model: models_1.Employee,
+                    attributes: employeeAttributes
+                }, {
+                    model: models_1.Table,
+                    attributes: tableAttributes
+                }]
+        });
+        return res.json({
+            ok: true,
+            collection: {
+                hasItems: Orders.length > 0 ? true : false,
+                items: Orders,
+                total: Orders.length
+            }
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false
+        });
+    }
+});
+exports.getOrdersWithoutPaying = getOrdersWithoutPaying;
+const getOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const orders = yield models_1.Order.findAll({
+        const order = yield models_1.Order.findOne({
             where: {
-                idCuenta: id
-            }
+                idOrden: id
+            },
+            attributes: OrderAttributes,
+            include: [{
+                    model: models_1.OrderDetail, attributes: OrderDetialAttributes, include: [{
+                            model: models_1.MenuItem, attributes: menuItemAttributes
+                        }]
+                }, {
+                    model: models_1.Employee,
+                    attributes: employeeAttributes
+                }, {
+                    model: models_1.Table,
+                    attributes: tableAttributes
+                }]
         });
         return res.json({
             ok: true,
-            collection: {
-                hasItems: orders.length > 0 ? true : false,
-                items: orders,
-                total: orders.length
-            }
+            order
         });
     }
     catch (error) {
@@ -55,18 +136,38 @@ const getOrdersByAccount = (req, res) => __awaiter(void 0, void 0, void 0, funct
         });
     }
 });
-exports.getOrdersByAccount = getOrdersByAccount;
-const createOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getOrder = getOrder;
+const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const payload = req.body;
     try {
-        const orders = yield models_1.Order.bulkCreate(payload.orders);
+        let payman_order_details = [...payload.order_details];
+        delete payload.order_details;
+        const { idOrden } = yield models_1.Order.create(payload);
+        payman_order_details = payman_order_details.map((_a) => {
+            var props = __rest(_a, []);
+            return (Object.assign(Object.assign({}, props), { idOrden }));
+        });
+        yield models_1.OrderDetail.bulkCreate(payman_order_details);
+        const order = yield models_1.Order.findOne({
+            where: {
+                idOrden,
+            },
+            attributes: OrderAttributes,
+            include: [{
+                    model: models_1.OrderDetail, attributes: OrderDetialAttributes, include: [{
+                            model: models_1.MenuItem, attributes: menuItemAttributes
+                        }]
+                }, {
+                    model: models_1.Employee,
+                    attributes: employeeAttributes
+                }, {
+                    model: models_1.Table,
+                    attributes: tableAttributes
+                }]
+        });
         return res.json({
             ok: true,
-            collection: {
-                hasItems: orders.length > 0 ? true : false,
-                items: orders,
-                total: orders.length
-            }
+            order
         });
     }
     catch (error) {
@@ -76,12 +177,16 @@ const createOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
     }
 });
-exports.createOrders = createOrders;
-const deleteOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createOrder = createOrder;
+const updateOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
     const payload = req.body;
     try {
+        const order = yield models_1.Order.findByPk(id);
+        yield (order === null || order === void 0 ? void 0 : order.update(payload));
         return res.json({
             ok: true,
+            order
         });
     }
     catch (error) {
@@ -91,5 +196,23 @@ const deleteOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
     }
 });
-exports.deleteOrders = deleteOrders;
+exports.updateOrder = updateOrder;
+const deleteOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return res.json({
+            ok: true
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false
+        });
+    }
+});
+exports.deleteOrder = deleteOrder;
+const sendOrder = (io, room, payload, action) => {
+    io.to(room).emit(`/sockets/orders/${action}`, payload);
+};
+exports.sendOrder = sendOrder;
 //# sourceMappingURL=orders.js.map

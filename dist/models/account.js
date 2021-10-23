@@ -4,13 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const connection_1 = __importDefault(require("../db/connection"));
+const connection_1 = require("../db/connection");
 const employee_1 = __importDefault(require("./employee"));
-const order_1 = __importDefault(require("./order"));
-class Account extends sequelize_1.Model {
+class Order extends sequelize_1.Model {
 }
-Account.init({
-    idCuenta: {
+Order.init({
+    idOrden: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -25,6 +24,7 @@ Account.init({
     },
     done: {
         type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: true
     },
     idEmpleado: {
         type: sequelize_1.DataTypes.INTEGER,
@@ -38,14 +38,14 @@ Account.init({
 }, {
     modelName: 'account',
     timestamps: false,
-    sequelize: connection_1.default,
+    sequelize: connection_1.sequelizeConnection,
     paranoid: true
 });
-Account.hasMany(order_1.default, {
-    foreignKey: 'idCuenta'
+Order.hasMany(Order, {
+    foreignKey: 'idOrden'
 });
-Account.belongsTo(employee_1.default, {
+Order.belongsTo(employee_1.default, {
     foreignKey: 'idEmpleado'
 });
-exports.default = Account;
+exports.default = Order;
 //# sourceMappingURL=account.js.map

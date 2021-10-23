@@ -1,21 +1,30 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import { hasExistMenuItem, hasExistCategory } from '../helpers/db-validators';
+import { hasExistMenuItem, hasExistCategory, hasExistComercial } from '../helpers/db-validators';
 
 import {
     getMenuItems,
+    getMenuItemsAvailable,
     getMenuItem,
     getMenuItemsByCategory,
     createMenuItem,
     updateMenuItem,
     deleteMenuItem,
-} from '../controllers';
+} from '../controllers/menu-items';
 import { validFields } from "../middlewares";
 
 const router: Router = Router();
 
 
-router.get('/', getMenuItems);
+router.get('/commercial/:idComercial', [
+    check('idComercial').custom(hasExistComercial),
+    validFields
+],getMenuItems);
+
+router.get('/available/commercial/:idComercial', [
+    check('idComercial').custom(hasExistComercial),
+    validFields
+],getMenuItemsAvailable);
 
 router.get('/:id', [
     check('id').custom(hasExistMenuItem),
@@ -28,7 +37,7 @@ router.get('/category/:idCategory', [
 ], getMenuItemsByCategory);
 
 router.post('/', [
-    check('nombre_Item')
+    check('nombre_item')
     .not().isEmpty()
     .withMessage('El nombre del item es obligatorio')
     .isLength({ min: 3 })
@@ -58,12 +67,17 @@ router.post('/', [
     .withMessage('El idCategoria es obligatorio')
     .isInt()
     .withMessage('El idCategoria debe ser un numero entero'),
+    check('idComercial')
+    .not().isEmpty()
+    .withMessage('El idComercial es obligatorio')
+    .isInt()
+    .withMessage('El idComercial debe ser un numero entero'),
     validFields
 ], createMenuItem);
 
 router.put('/:id', [
     check('id').custom(hasExistMenuItem),
-    check('nombre_Item')
+    check('nombre_item')
     .not().isEmpty()
     .withMessage('El nombre del item es obligatorio')
     .isLength({ min: 3 })
@@ -93,6 +107,11 @@ router.put('/:id', [
     .withMessage('El idCategoria es obligatorio')
     .isInt()
     .withMessage('El idCategoria debe ser un numero entero'),
+    check('idComercial')
+    .not().isEmpty()
+    .withMessage('El idComercial es obligatorio')
+    .isInt()
+    .withMessage('El idComercial debe ser un numero entero'),
     validFields
 ], updateMenuItem);
 

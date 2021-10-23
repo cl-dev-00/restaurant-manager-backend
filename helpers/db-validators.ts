@@ -1,4 +1,4 @@
-import { Account, Category, Employee, MenuItem, Order } from "../models";
+import { Order, Commercial, Category, Employee, MenuItem, OrderDetail } from "../models";
 
 export const hasExistCategory = async (id: number) => {
 
@@ -30,22 +30,31 @@ export const hasExistEmployee = async (id: number) => {
 
 }
 
-export const hasExistAccount = async (id: number) => {
+export const hasExistOrder = async (id: number) => {
 
-    const account = await Account.findByPk(id);
+    const account = await Order.findByPk(id);
 
     if (!account) {
-        throw new Error('La cuenta no existe');
+        throw new Error('La ordern no existe');
     }
 
 }
 
-export const hasExistOrder = async (id: number) => {
+export const hasExistOrderDetail = async (id: number) => {
 
-    const order = await Order.findByPk(id);
+    const orderDetail = await OrderDetail.findByPk(id);
 
-    if (!order) {
-        throw new Error('La orden no existe');
+    if (!orderDetail) {
+        throw new Error('El detalle de la orden no existe');
+    }
+}
+
+export const hasExistComercial = async (idComercial: number) => {
+
+    const commercial = await Commercial.findByPk(idComercial);
+
+    if(!commercial) {
+        throw new Error('La sucursal no existe');
     }
 
 }

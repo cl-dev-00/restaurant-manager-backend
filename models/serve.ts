@@ -1,17 +1,28 @@
 import express from 'express';
 import cors from 'cors';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
-import { accounts, categories, menuItems, orders } from '../routers';
+import { orders, categories, menuItems, orderDetails, tables } from '../routers';
+import socketController from '../sockets/controller';
 
-export default class Server {
+export default class AppServer {
 
     private app: express.Application = express();
+    private server = createServer(this.app);
+    private io: Server = new Server(this.server, {
+        cors: {
+            origin: ['http://localhost:8080'],
+            allowedHeaders: ['idComercial']
+        }
+    });
     private port: string = process.env.PORT || '4000';
     private paths = {
         categories: '/api/categories',
         menuItems: '/api/menu-items',
-        accounts: '/api/accounts',
-        orders: '/api/orders',
+        accounts: '/api/orders',
+        orders: '/api/order-details',
+        tables: '/api/tables',
     }
 
     public constructor() {
@@ -19,25 +30,32 @@ export default class Server {
 
         this.routers();
 
+        this.sockets();
+
         this.listen();
     }
-    
+
     private routers(): void {
         this.app.use(this.paths.categories, categories);
         this.app.use(this.paths.menuItems, menuItems);
-        this.app.use(this.paths.accounts, accounts);
-        this.app.use(this.paths.orders, orders);
+        this.app.use(this.paths.accounts, orders);
+        this.app.use(this.paths.orders, orderDetails);
+        this.app.use(this.paths.tables, tables);
     }
-    
+
     private middlewares() {
         this.app.use(cors());
         this.app.use(express.static('public'));
         this.app.use(express.json());
     }
 
+    private sockets() {
+        this.io.on('connection', (socket) => socketController(socket, this.io));
+    }
+
     private listen(): void {
         try {
-            this.app.listen(this.port, () => {
+            this.server.listen(this.port, () => {
                 console.log(`Server running on http://localhost:${this.port}`)
             })
         } catch (error: any) {

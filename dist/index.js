@@ -6,5 +6,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const models_1 = require("./models");
-const server = new models_1.Server();
+const server = new models_1.AppServer();
 //# sourceMappingURL=index.js.map

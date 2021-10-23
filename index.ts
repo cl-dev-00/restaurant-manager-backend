@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-import { Server } from './models';
+import { AppServer } from './models';
 
-const server:Server = new Server();
+const server: AppServer = new AppServer();
 

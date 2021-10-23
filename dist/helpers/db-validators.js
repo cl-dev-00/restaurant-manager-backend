@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hasExistOrder = exports.hasExistAccount = exports.hasExistEmployee = exports.hasExistMenuItem = exports.hasExistCategory = void 0;
+exports.hasExistComercial = exports.hasExistOrderDetail = exports.hasExistOrder = exports.hasExistEmployee = exports.hasExistMenuItem = exports.hasExistCategory = void 0;
 const models_1 = require("../models");
 const hasExistCategory = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const category = yield models_1.Category.findByPk(id);
@@ -32,18 +32,25 @@ const hasExistEmployee = (id) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.hasExistEmployee = hasExistEmployee;
-const hasExistAccount = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const account = yield models_1.Account.findByPk(id);
-    if (!account) {
-        throw new Error('La cuenta no existe');
-    }
-});
-exports.hasExistAccount = hasExistAccount;
 const hasExistOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const order = yield models_1.Order.findByPk(id);
-    if (!order) {
-        throw new Error('La orden no existe');
+    const account = yield models_1.Order.findByPk(id);
+    if (!account) {
+        throw new Error('La ordern no existe');
     }
 });
 exports.hasExistOrder = hasExistOrder;
+const hasExistOrderDetail = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const orderDetail = yield models_1.OrderDetail.findByPk(id);
+    if (!orderDetail) {
+        throw new Error('El detalle de la orden no existe');
+    }
+});
+exports.hasExistOrderDetail = hasExistOrderDetail;
+const hasExistComercial = (idComercial) => __awaiter(void 0, void 0, void 0, function* () {
+    const commercial = yield models_1.Commercial.findByPk(idComercial);
+    if (!commercial) {
+        throw new Error('La sucursal no existe');
+    }
+});
+exports.hasExistComercial = hasExistComercial;
 //# sourceMappingURL=db-validators.js.map
