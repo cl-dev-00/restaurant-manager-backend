@@ -12,11 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.changeStateMenuItem = exports.deleteMenuItem = exports.updateMenuItem = exports.createMenuItem = exports.getMenuItemsByCategory = exports.getMenuItem = exports.getMenuItemsAvailable = exports.getMenuItems = void 0;
 const models_1 = require("../models");
 const getMenuItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { idComercial } = req.params;
     try {
         const menuItems = yield models_1.MenuItem.findAll({
             where: {
-                idComercial
+                idComercial: 1,
+                deletedAt: null
             }
         });
         return res.json({
@@ -24,7 +24,6 @@ const getMenuItems = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                total: menuItems.length
             }
         });
     }
@@ -37,12 +36,12 @@ const getMenuItems = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.getMenuItems = getMenuItems;
 const getMenuItemsAvailable = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { idComercial } = req.params;
     try {
         const menuItems = yield models_1.MenuItem.findAll({
             where: {
-                idComercial,
-                disponibilidad: true
+                idComercial: 1,
+                disponibilidad: true,
+                deletedAt: null
             }
         });
         return res.json({
@@ -50,7 +49,6 @@ const getMenuItemsAvailable = (req, res) => __awaiter(void 0, void 0, void 0, fu
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                total: menuItems.length
             }
         });
     }
@@ -84,7 +82,9 @@ const getMenuItemsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, f
     try {
         const menuItems = yield models_1.MenuItem.findAll({
             where: {
-                idCategoria: idCategory
+                idCategoria: idCategory,
+                idComercial: 1,
+                deletedAt: null
             }
         });
         return res.json({
@@ -92,7 +92,6 @@ const getMenuItemsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, f
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                total: menuItems.length
             }
         });
     }

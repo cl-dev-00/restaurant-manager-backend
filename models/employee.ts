@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 
 import { sequelizeConnection } from "../db/connection";
+import Role from './role';
 
 interface EmployeeAttributes {
     idEmpleado: number,
@@ -34,7 +35,7 @@ class Employee extends Model<EmployeeAttributes, EmployeeInput> {
     public email!: string;
     public nombre!: string;
     public apellido!: string;
-    public url!: string;
+    public url?: string;
     public password!: string;
     public username!: string;
 
@@ -84,7 +85,7 @@ Employee.init({
     },
     url: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     password: {
         type: DataTypes.TEXT,
@@ -96,9 +97,13 @@ Employee.init({
     },
 }, {
     modelName: 'employee',
-    timestamps: false,
+    timestamps: true,
     sequelize: sequelizeConnection,
-    paranoid: true
+    paranoid: true,
 })
+
+Employee.belongsTo(Role, {
+    foreignKey: 'idRol'
+});
 
 export default Employee;

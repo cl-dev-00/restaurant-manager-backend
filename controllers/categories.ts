@@ -5,14 +5,17 @@ import { Category } from "../models"
 const getCategories = async (req: Request, res: Response): Promise<Response> => {
 
     try {
-        const categories = await Category.findAll();
+        const categories = await Category.findAll({
+            where: {
+                deletedAt: null
+            }
+        });
 
         return res.json({
             ok: true,
             collection: {
                 hasItems: categories.length > 0 ? true : false,
                 items: categories,
-                total: categories.length
             }
         })
     } catch (error) {

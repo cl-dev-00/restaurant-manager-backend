@@ -9,9 +9,9 @@ interface TableAttributes {
     disponible: boolean;
     numero: number;
 
-    created?: Date;
-    updated?: Date;
-    deleted?: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?: Date;
 }
 
 interface TableInput extends Optional<TableAttributes, 'idMesa'> { }
@@ -23,9 +23,9 @@ class Table extends Model<TableAttributes, TableInput> {
     public disponible!: boolean;
     public numero!: number;
     
-    public readonly created!: Date;
-    public readonly updated!: Date;
-    public readonly deleted!: Date;
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
+    public readonly deletedAt!: Date;
 }
 
 Table.init({

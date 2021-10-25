@@ -9,19 +9,15 @@ import {
     updateOrder,
     deleteOrder,
 } from '../controllers/orders';
-import { hasExistOrder, hasExistMenuItem, hasExistComercial } from '../helpers/db-validators';
+import { hasExistOrder, hasExistMenuItem } from '../helpers/db-validators';
 import { validFields } from "../middlewares";
 
 const router: Router = Router();
 
-router.get('/undone/:idComercial', [
-    check('idComercial').custom(hasExistComercial),
-    validFields
+router.get('/undone', [
 ], getOrdersUndone)
 
-router.get('/without-paying/:idComercial', [
-    check('idComercial').custom(hasExistComercial),
-    validFields
+router.get('/without-paying', [
 ], getOrdersWithoutPaying)
 
 router.get('/:id', [
@@ -30,7 +26,7 @@ router.get('/:id', [
 ], getOrder);
 
 router.post('/', [
-    
+
     check('nombreCliente')
         .not().isEmpty()
         .withMessage('El nombre del cliente es obligatorio')
@@ -39,18 +35,18 @@ router.post('/', [
     check('fechaOrden')
         .not().isEmpty()
         .withMessage('La fecha de la orden es obligatorio'),
-        // .isDate()
-        // .withMessage('fechaOrden debe ser una fecha'),
+    // .isDate()
+    // .withMessage('fechaOrden debe ser una fecha'),
     check('idEmpleado')
         .not().isEmpty()
         .withMessage('EL id del empleado es obligatorio')
-        .isInt()
-        .withMessage('El id del empleado debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El id del empleado debe ser un numero entero positivo'),
     check('idComercial')
         .not().isEmpty()
         .withMessage('EL id del comercial es obligatorio')
-        .isInt()
-        .withMessage('El id del comercial debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El id del comercial debe ser un numero entero positivo'),
     check('order_details')
         .not().isEmpty()
         .withMessage('Los order_details son obligatorios')
@@ -59,14 +55,14 @@ router.post('/', [
     check('order_details.*.id_menu_item')
         .not().isEmpty()
         .withMessage('El id_menu_item es obligatorio')
-        .isInt()
-        .withMessage('El id_menu_item debe ser un entero')
+        .isInt({ min: 1 })
+        .withMessage('El id_menu_item debe ser un entero positivo')
         .custom(hasExistMenuItem),
     check('order_details.*.cantidad')
         .not().isEmpty()
         .withMessage('La cantidad es obligatorio')
         .isInt({ min: 1 })
-        .withMessage('La cantidad debe ser un entero mayor a cero'),
+        .withMessage('La cantidad debe ser un entero positivo'),
     check('order_details.*.importe')
         .not().isEmpty()
         .withMessage('El importe es obligatorio')
@@ -90,18 +86,18 @@ router.put('/:id', [
     check('fechaOrden')
         .not().isEmpty()
         .withMessage('La fecha de la cuenta es obligatorio'),
-        // .isDate()
-        // .withMessage('fechaOrden debe ser una fecha'),
+    // .isDate()
+    // .withMessage('fechaOrden debe ser una fecha'),
     check('idEmpleado')
         .not().isEmpty()
         .withMessage('EL id del empleado es  obligatorio')
-        .isInt()
-        .withMessage('El id del empleado debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El id del empleado debe ser un numero entero positivo'),
     check('idComercial')
         .not().isEmpty()
         .withMessage('EL id del comercial es obligatorio')
-        .isInt()
-        .withMessage('El id del comercial debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El id del comercial debe ser un numero entero positivo'),
     validFields
 ], updateOrder);
 

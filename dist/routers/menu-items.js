@@ -6,14 +6,8 @@ const db_validators_1 = require("../helpers/db-validators");
 const menu_items_1 = require("../controllers/menu-items");
 const middlewares_1 = require("../middlewares");
 const router = (0, express_1.Router)();
-router.get('/commercial/:idComercial', [
-    (0, express_validator_1.check)('idComercial').custom(db_validators_1.hasExistComercial),
-    middlewares_1.validFields
-], menu_items_1.getMenuItems);
-router.get('/available/commercial/:idComercial', [
-    (0, express_validator_1.check)('idComercial').custom(db_validators_1.hasExistComercial),
-    middlewares_1.validFields
-], menu_items_1.getMenuItemsAvailable);
+router.get('/', [], menu_items_1.getMenuItems);
+router.get('/available', [], menu_items_1.getMenuItemsAvailable);
 router.get('/:id', [
     (0, express_validator_1.check)('id').custom(db_validators_1.hasExistMenuItem),
     middlewares_1.validFields
@@ -36,8 +30,8 @@ router.post('/', [
     (0, express_validator_1.check)('disponibilidad')
         .not().isEmpty()
         .withMessage('La disponibilidad es obligatorio')
-        .isInt()
-        .withMessage('La disponibilidad debe ser un numero entero'),
+        .isBoolean()
+        .withMessage('La disponibilidad debe ser un valor booleano'),
     (0, express_validator_1.check)('detalles_item')
         .not().isEmpty()
         .withMessage('El detalle del item es obligatorio')
@@ -51,13 +45,13 @@ router.post('/', [
     (0, express_validator_1.check)('idCategoria')
         .not().isEmpty()
         .withMessage('El idCategoria es obligatorio')
-        .isInt()
-        .withMessage('El idCategoria debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El idCategoria debe ser un numero entero positivo'),
     (0, express_validator_1.check)('idComercial')
         .not().isEmpty()
         .withMessage('El idComercial es obligatorio')
-        .isInt()
-        .withMessage('El idComercial debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El idComercial debe ser un numero entero positivo'),
     middlewares_1.validFields
 ], menu_items_1.createMenuItem);
 router.put('/:id', [
@@ -75,8 +69,8 @@ router.put('/:id', [
     (0, express_validator_1.check)('disponibilidad')
         .not().isEmpty()
         .withMessage('La disponibilidad es obligatorio')
-        .isInt()
-        .withMessage('La disponibilidad debe ser un numero entero'),
+        .isBoolean()
+        .withMessage('La disponibilidad debe ser un valor booleano'),
     (0, express_validator_1.check)('detalles_item')
         .not().isEmpty()
         .withMessage('El detalle del item es obligatorio')
@@ -90,13 +84,13 @@ router.put('/:id', [
     (0, express_validator_1.check)('idCategoria')
         .not().isEmpty()
         .withMessage('El idCategoria es obligatorio')
-        .isInt()
-        .withMessage('El idCategoria debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El idCategoria debe ser un numero entero positivo'),
     (0, express_validator_1.check)('idComercial')
         .not().isEmpty()
         .withMessage('El idComercial es obligatorio')
-        .isInt()
-        .withMessage('El idComercial debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El idComercial debe ser un numero entero positivo'),
     middlewares_1.validFields
 ], menu_items_1.updateMenuItem);
 router.delete('/:id', [

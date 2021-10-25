@@ -28,12 +28,12 @@ const menuItemAttributes = ['nombre_item', 'precio', 'disponibilidad', 'detalles
 const employeeAttributes = ['idEmpleado', 'nombre', 'apellido'];
 const tableAttributes = ['numero'];
 const getOrdersUndone = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { idComercial } = req.params;
     try {
         const Orders = yield models_1.Order.findAll({
             where: {
                 done: false,
-                idComercial
+                idComercial: 1,
+                deletedAt: null
             },
             attributes: OrderAttributes,
             include: [{
@@ -53,7 +53,6 @@ const getOrdersUndone = (req, res) => __awaiter(void 0, void 0, void 0, function
             collection: {
                 hasItems: Orders.length > 0 ? true : false,
                 items: Orders,
-                total: Orders.length
             }
         });
     }
@@ -66,13 +65,13 @@ const getOrdersUndone = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.getOrdersUndone = getOrdersUndone;
 const getOrdersWithoutPaying = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { idComercial } = req.params;
     try {
         const Orders = yield models_1.Order.findAll({
             where: {
                 done: true,
                 pagado: false,
-                idComercial
+                idComercial: 1,
+                deletedAt: null
             },
             attributes: OrderAttributes,
             include: [{
@@ -92,7 +91,6 @@ const getOrdersWithoutPaying = (req, res) => __awaiter(void 0, void 0, void 0, f
             collection: {
                 hasItems: Orders.length > 0 ? true : false,
                 items: Orders,
-                total: Orders.length
             }
         });
     }

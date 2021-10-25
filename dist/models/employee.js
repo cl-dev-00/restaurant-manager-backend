@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const connection_1 = require("../db/connection");
+const role_1 = __importDefault(require("./role"));
 class Employee extends sequelize_1.Model {
 }
 Employee.init({
@@ -44,7 +48,7 @@ Employee.init({
     },
     url: {
         type: sequelize_1.DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     password: {
         type: sequelize_1.DataTypes.TEXT,
@@ -56,9 +60,12 @@ Employee.init({
     },
 }, {
     modelName: 'employee',
-    timestamps: false,
+    timestamps: true,
     sequelize: connection_1.sequelizeConnection,
-    paranoid: true
+    paranoid: true,
+});
+Employee.belongsTo(role_1.default, {
+    foreignKey: 'idRol'
 });
 exports.default = Employee;
 //# sourceMappingURL=employee.js.map

@@ -19,20 +19,20 @@ router.post('/', [
     (0, express_validator_1.check)('order_details.*.idOrden')
         .not().isEmpty()
         .withMessage('El id de la orden es obligatorio')
-        .isInt()
-        .withMessage('El id de la orden debe ser un entero')
+        .isInt({ min: 1 })
+        .withMessage('El id de la orden debe ser un entero positivo')
         .custom(db_validators_1.hasExistOrder),
     (0, express_validator_1.check)('order_details.*.id_item_menu')
         .not().isEmpty()
         .withMessage('El id_item_menu es obligatorio')
-        .isInt()
-        .withMessage('El id_item_menu debe ser un entero')
+        .isInt({ min: 1 })
+        .withMessage('El id_item_menu debe ser un entero positivo')
         .custom(db_validators_1.hasExistMenuItem),
     (0, express_validator_1.check)('order_details.*.cantidad')
         .not().isEmpty()
         .withMessage('La cantidad es obligatorio')
         .isInt({ min: 1 })
-        .withMessage('La cantidad debe ser un entero mayor a cero'),
+        .withMessage('La cantidad debe ser un entero positivo'),
     (0, express_validator_1.check)('order_details.*.importe')
         .not().isEmpty()
         .withMessage('El importe es obligatorio')

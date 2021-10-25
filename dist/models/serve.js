@@ -26,6 +26,8 @@ class AppServer {
             accounts: '/api/orders',
             orders: '/api/order-details',
             tables: '/api/tables',
+            employees: '/api/employees',
+            roles: '/api/roles',
         };
         this.middlewares();
         this.routers();
@@ -38,6 +40,8 @@ class AppServer {
         this.app.use(this.paths.accounts, routers_1.orders);
         this.app.use(this.paths.orders, routers_1.orderDetails);
         this.app.use(this.paths.tables, routers_1.tables);
+        this.app.use(this.paths.employees, routers_1.employees);
+        this.app.use(this.paths.roles, routers_1.roles);
     }
     middlewares() {
         this.app.use((0, cors_1.default)());

@@ -12,14 +12,13 @@ const tableAttributes: string[] = ['numero'];
 
 const getOrdersUndone = async (req: Request, res: Response): Promise<Response> => {
 
-    const { idComercial } = req.params;
-
     try {
 
         const Orders = await Order.findAll({
             where: {
                 done: false,
-                idComercial
+                idComercial: 1,
+                deletedAt: null
             },
             attributes: OrderAttributes,
             include: [{
@@ -40,7 +39,6 @@ const getOrdersUndone = async (req: Request, res: Response): Promise<Response> =
             collection: {
                 hasItems: Orders.length > 0 ? true : false,
                 items: Orders,
-                total: Orders.length
             }
         });
 
@@ -55,15 +53,14 @@ const getOrdersUndone = async (req: Request, res: Response): Promise<Response> =
 
 const getOrdersWithoutPaying = async (req: Request, res: Response): Promise<Response> => {
 
-    const { idComercial } = req.params;
-
     try {
 
         const Orders = await Order.findAll({
             where: {
                 done: true,
                 pagado: false,
-                idComercial
+                idComercial: 1,
+                deletedAt: null
             },
             attributes: OrderAttributes,
             include: [{
@@ -84,7 +81,6 @@ const getOrdersWithoutPaying = async (req: Request, res: Response): Promise<Resp
             collection: {
                 hasItems: Orders.length > 0 ? true : false,
                 items: Orders,
-                total: Orders.length
             }
         });
 

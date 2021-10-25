@@ -7,13 +7,12 @@ import { MenuItem } from "../models";
 
 const getMenuItems = async (req: Request, res: Response): Promise<Response> => {
 
-    const { idComercial } = req.params;
-
     try {
 
         const menuItems = await MenuItem.findAll({
             where: {
-                idComercial
+                idComercial: 1,
+                deletedAt: null
             }
         });
 
@@ -22,7 +21,6 @@ const getMenuItems = async (req: Request, res: Response): Promise<Response> => {
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                total: menuItems.length
             }
         });
 
@@ -38,14 +36,13 @@ const getMenuItems = async (req: Request, res: Response): Promise<Response> => {
 
 const getMenuItemsAvailable = async (req: Request, res: Response): Promise<Response> => {
 
-    const { idComercial } = req.params;
-
     try {
 
         const menuItems = await MenuItem.findAll({
             where: {
-                idComercial,
-                disponibilidad: true
+                idComercial: 1,
+                disponibilidad: true,
+                deletedAt: null
             }
         });
 
@@ -54,7 +51,6 @@ const getMenuItemsAvailable = async (req: Request, res: Response): Promise<Respo
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                total: menuItems.length
             }
         });
 
@@ -98,7 +94,9 @@ const getMenuItemsByCategory = async (req: Request, res: Response): Promise<Resp
 
         const menuItems = await MenuItem.findAll({
             where: {
-                idCategoria: idCategory
+                idCategoria: idCategory,
+                idComercial: 1,
+                deletedAt: null
             }
         })
 
@@ -107,7 +105,6 @@ const getMenuItemsByCategory = async (req: Request, res: Response): Promise<Resp
             collection: {
                 hasItems: menuItems.length > 0 ? true : false,
                 items: menuItems,
-                total: menuItems.length
             }
         });
 

@@ -6,14 +6,8 @@ const orders_1 = require("../controllers/orders");
 const db_validators_1 = require("../helpers/db-validators");
 const middlewares_1 = require("../middlewares");
 const router = (0, express_1.Router)();
-router.get('/undone/:idComercial', [
-    (0, express_validator_1.check)('idComercial').custom(db_validators_1.hasExistComercial),
-    middlewares_1.validFields
-], orders_1.getOrdersUndone);
-router.get('/without-paying/:idComercial', [
-    (0, express_validator_1.check)('idComercial').custom(db_validators_1.hasExistComercial),
-    middlewares_1.validFields
-], orders_1.getOrdersWithoutPaying);
+router.get('/undone', [], orders_1.getOrdersUndone);
+router.get('/without-paying', [], orders_1.getOrdersWithoutPaying);
 router.get('/:id', [
     (0, express_validator_1.check)('id').custom(db_validators_1.hasExistOrder),
     middlewares_1.validFields
@@ -30,13 +24,13 @@ router.post('/', [
     (0, express_validator_1.check)('idEmpleado')
         .not().isEmpty()
         .withMessage('EL id del empleado es obligatorio')
-        .isInt()
-        .withMessage('El id del empleado debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El id del empleado debe ser un numero entero positivo'),
     (0, express_validator_1.check)('idComercial')
         .not().isEmpty()
         .withMessage('EL id del comercial es obligatorio')
-        .isInt()
-        .withMessage('El id del comercial debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El id del comercial debe ser un numero entero positivo'),
     (0, express_validator_1.check)('order_details')
         .not().isEmpty()
         .withMessage('Los order_details son obligatorios')
@@ -45,14 +39,14 @@ router.post('/', [
     (0, express_validator_1.check)('order_details.*.id_menu_item')
         .not().isEmpty()
         .withMessage('El id_menu_item es obligatorio')
-        .isInt()
-        .withMessage('El id_menu_item debe ser un entero')
+        .isInt({ min: 1 })
+        .withMessage('El id_menu_item debe ser un entero positivo')
         .custom(db_validators_1.hasExistMenuItem),
     (0, express_validator_1.check)('order_details.*.cantidad')
         .not().isEmpty()
         .withMessage('La cantidad es obligatorio')
         .isInt({ min: 1 })
-        .withMessage('La cantidad debe ser un entero mayor a cero'),
+        .withMessage('La cantidad debe ser un entero positivo'),
     (0, express_validator_1.check)('order_details.*.importe')
         .not().isEmpty()
         .withMessage('El importe es obligatorio')
@@ -78,13 +72,13 @@ router.put('/:id', [
     (0, express_validator_1.check)('idEmpleado')
         .not().isEmpty()
         .withMessage('EL id del empleado es  obligatorio')
-        .isInt()
-        .withMessage('El id del empleado debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El id del empleado debe ser un numero entero positivo'),
     (0, express_validator_1.check)('idComercial')
         .not().isEmpty()
         .withMessage('EL id del comercial es obligatorio')
-        .isInt()
-        .withMessage('El id del comercial debe ser un numero entero'),
+        .isInt({ min: 1 })
+        .withMessage('El id del comercial debe ser un numero entero positivo'),
     middlewares_1.validFields
 ], orders_1.updateOrder);
 router.delete('/:id', [

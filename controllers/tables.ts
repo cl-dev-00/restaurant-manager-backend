@@ -4,13 +4,12 @@ import { Table } from "../models";
 
 const getTablesByComercial = async (req: Request, res: Response): Promise<Response> => {
 
-    const { idComercial } = req.params;
-
     try {
 
         const tables = await Table.findAll({
             where: {
-                idComercial
+                idComercial: 1,
+                deletedAt: null
             }
         })
 
@@ -19,7 +18,6 @@ const getTablesByComercial = async (req: Request, res: Response): Promise<Respon
             collection: {
                 hasItems: tables.length > 0 ? true : false,
                 items: tables,
-                total: tables.length
             }
         });
 
@@ -34,14 +32,13 @@ const getTablesByComercial = async (req: Request, res: Response): Promise<Respon
 
 const getTablesAvailable = async (req: Request, res: Response): Promise<Response> => {
 
-    const { idComercial } = req.params;
-
     try {
 
         const tables = await Table.findAll({
             where: {
-                idComercial,
-                disponible: true
+                idComercial: 1,
+                disponible: true,
+                deletedAt: null,
             }
         })
 
@@ -50,7 +47,6 @@ const getTablesAvailable = async (req: Request, res: Response): Promise<Response
             collection: {
                 hasItems: tables.length > 0 ? true : false,
                 items: tables,
-                total: tables.length
             }
         });
 

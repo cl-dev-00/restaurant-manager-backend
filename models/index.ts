@@ -6,6 +6,7 @@ import Order from "./order";
 import Employee from './employee';
 import Commercial from "./commercial";
 import Table from "./table";
+import Role from './role';
 
 export {
     AppServer,
@@ -15,5 +16,6 @@ export {
     Order,
     Employee,
     Commercial,
-    Table
+    Table,
+    Role
 }

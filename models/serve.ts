@@ -3,7 +3,7 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-import { orders, categories, menuItems, orderDetails, tables } from '../routers';
+import { orders, categories, menuItems, orderDetails, tables, employees, roles } from '../routers';
 import socketController from '../sockets/controller';
 
 export default class AppServer {
@@ -23,6 +23,8 @@ export default class AppServer {
         accounts: '/api/orders',
         orders: '/api/order-details',
         tables: '/api/tables',
+        employees: '/api/employees',
+        roles: '/api/roles',
     }
 
     public constructor() {
@@ -41,6 +43,8 @@ export default class AppServer {
         this.app.use(this.paths.accounts, orders);
         this.app.use(this.paths.orders, orderDetails);
         this.app.use(this.paths.tables, tables);
+        this.app.use(this.paths.employees, employees);
+        this.app.use(this.paths.roles, roles);
     }
 
     private middlewares() {

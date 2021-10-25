@@ -3,11 +3,11 @@ import { createTable, deleteTable, getTable, getTablesAvailable, getTablesByCome
 
 const router = Router();
 
-router.get('/commercial/:idComercial', [
+router.get('/', [
 
 ], getTablesByComercial);
 
-router.get('/available/commercial/:idComercial', [
+router.get('/available', [
 
 ], getTablesAvailable);
 

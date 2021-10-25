@@ -16,7 +16,8 @@ const getOrderDetailByOrder = (req, res) => __awaiter(void 0, void 0, void 0, fu
     try {
         const orders = yield models_1.OrderDetail.findAll({
             where: {
-                idOrden: id
+                idOrden: id,
+                deletedAt: null
             }
         });
         return res.json({
@@ -24,7 +25,6 @@ const getOrderDetailByOrder = (req, res) => __awaiter(void 0, void 0, void 0, fu
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                total: orders.length
             }
         });
     }
@@ -45,7 +45,6 @@ const createOrderDetails = (req, res) => __awaiter(void 0, void 0, void 0, funct
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                total: orders.length
             }
         });
     }

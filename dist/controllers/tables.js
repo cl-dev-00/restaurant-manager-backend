@@ -12,11 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTable = exports.updateTable = exports.createTable = exports.getTable = exports.getTablesAvailable = exports.getTablesByComercial = void 0;
 const models_1 = require("../models");
 const getTablesByComercial = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { idComercial } = req.params;
     try {
         const tables = yield models_1.Table.findAll({
             where: {
-                idComercial
+                idComercial: 1,
+                deletedAt: null
             }
         });
         return res.json({
@@ -24,7 +24,6 @@ const getTablesByComercial = (req, res) => __awaiter(void 0, void 0, void 0, fun
             collection: {
                 hasItems: tables.length > 0 ? true : false,
                 items: tables,
-                total: tables.length
             }
         });
     }
@@ -37,12 +36,12 @@ const getTablesByComercial = (req, res) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.getTablesByComercial = getTablesByComercial;
 const getTablesAvailable = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { idComercial } = req.params;
     try {
         const tables = yield models_1.Table.findAll({
             where: {
-                idComercial,
-                disponible: true
+                idComercial: 1,
+                disponible: true,
+                deletedAt: null,
             }
         });
         return res.json({
@@ -50,7 +49,6 @@ const getTablesAvailable = (req, res) => __awaiter(void 0, void 0, void 0, funct
             collection: {
                 hasItems: tables.length > 0 ? true : false,
                 items: tables,
-                total: tables.length
             }
         });
     }

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Server } from "socket.io";
 
 import {  OrderDetail } from "../models";
 
@@ -13,7 +12,8 @@ const getOrderDetailByOrder = async (req: Request, res: Response): Promise<Respo
 
         const orders = await OrderDetail.findAll({
             where: {
-                idOrden: id
+                idOrden: id,
+                deletedAt: null
             }
         });
 
@@ -22,7 +22,6 @@ const getOrderDetailByOrder = async (req: Request, res: Response): Promise<Respo
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                total: orders.length
             }
         });
 
@@ -48,7 +47,6 @@ const createOrderDetails = async (req: Request, res: Response): Promise<Response
             collection: {
                 hasItems: orders.length > 0 ? true : false,
                 items: orders,
-                total: orders.length
             }
         });
 
@@ -90,7 +88,6 @@ const changeDoneOrderDetail = async (id: number) => {
         const orderDetailUpdate = { ...orderDetail };
 
         orderDetailUpdate.done = !orderDetail?.done;
-        // delete (orderDetailUpdate as any).idOrden;
 
         await orderDetail?.update(orderDetailUpdate);
 

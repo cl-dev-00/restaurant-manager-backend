@@ -13,13 +13,16 @@ exports.deleteCategory = exports.updateCategory = exports.createCategory = expor
 const models_1 = require("../models");
 const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const categories = yield models_1.Category.findAll();
+        const categories = yield models_1.Category.findAll({
+            where: {
+                deletedAt: null
+            }
+        });
         return res.json({
             ok: true,
             collection: {
                 hasItems: categories.length > 0 ? true : false,
                 items: categories,
-                total: categories.length
             }
         });
     }
