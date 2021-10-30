@@ -4,9 +4,9 @@ import { Order, Employee, MenuItem, OrderDetail, Table } from "../models";
 
 const OrderAttributes: string[] = ['idOrden', 'idComercial', 'nombreCliente', 'fechaOrden', 'done', 'pagado'];
 const OrderDetialAttributes: string[] = ['idOrderDetail', 'cantidad', 'importe', 'comentario', 'done'];
-const menuItemAttributes: string[] = ['nombre_item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
+const menuItemAttributes: string[] = ['id_menu_item', "idCategoria", 'nombre_item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
 const employeeAttributes: string[] = ['idEmpleado', 'nombre', 'apellido'];
-const tableAttributes: string[] = ['numero'];
+const tableAttributes: string[] = ['idMesa', 'numero'];
 
 // API REST CONTROLLER
 
@@ -166,7 +166,7 @@ const createOrder = async (req: Request, res: Response): Promise<Response> => {
                 model: Table,
                 attributes: tableAttributes
             }]
-        })
+        });
 
 
         return res.json({
@@ -185,18 +185,58 @@ const createOrder = async (req: Request, res: Response): Promise<Response> => {
 
 const updateOrder = async (req: Request, res: Response): Promise<Response> => {
 
-    const { id } = req.params;
-    const payload = req.body;
-
     try {
+        const { id } = req.params;
+        const { newMenuItems, itemsMenuEdit, itemsMenuRemove, ...payload } = req.body;
 
         const order = await Order.findByPk(id);
 
-        await order?.update(payload);
+        await order?.update({ ...payload, done: !order.done });
+
+        await OrderDetail.bulkCreate(newMenuItems);
+
+        await OrderDetail.destroy({
+            where: {
+                idOrden: id,
+                id_menu_item: itemsMenuRemove
+            }
+        });
+
+        for (const itemOrderUpdate of itemsMenuEdit) {
+
+            const item = await OrderDetail.findOne({
+                where: {
+                    idOrden: id,
+                    id_menu_item: itemOrderUpdate.id_menu_item
+                }
+            });
+
+            await item?.update({...itemOrderUpdate, done: false })
+
+        };
+
+        const orderUpdated = await Order.findOne({
+            where: {
+                idOrden: id,
+            },
+            attributes: OrderAttributes,
+            include: [{
+                model: OrderDetail, attributes: OrderDetialAttributes, include: [{
+                    model: MenuItem, attributes: menuItemAttributes
+                }]
+            }, {
+                model: Employee,
+                attributes: employeeAttributes
+            }, {
+                model: Table,
+                attributes: tableAttributes
+            }]
+        });
 
         return res.json({
             ok: true,
-            order
+            order: orderUpdated
+            
         });
 
     } catch (error) {

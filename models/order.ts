@@ -72,7 +72,7 @@ Order.init({
     },
 }, {
     modelName: 'order',
-    timestamps: false,
+    timestamps: true,
     sequelize: sequelizeConnection,
     paranoid: true
 });

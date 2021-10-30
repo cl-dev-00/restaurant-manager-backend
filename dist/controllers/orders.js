@@ -24,9 +24,9 @@ exports.sendOrder = exports.deleteOrder = exports.updateOrder = exports.createOr
 const models_1 = require("../models");
 const OrderAttributes = ['idOrden', 'idComercial', 'nombreCliente', 'fechaOrden', 'done', 'pagado'];
 const OrderDetialAttributes = ['idOrderDetail', 'cantidad', 'importe', 'comentario', 'done'];
-const menuItemAttributes = ['nombre_item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
+const menuItemAttributes = ['id_menu_item', "idCategoria", 'nombre_item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
 const employeeAttributes = ['idEmpleado', 'nombre', 'apellido'];
-const tableAttributes = ['numero'];
+const tableAttributes = ['idMesa', 'numero'];
 const getOrdersUndone = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const Orders = yield models_1.Order.findAll({
@@ -177,14 +177,48 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.createOrder = createOrder;
 const updateOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const payload = req.body;
     try {
+        const { id } = req.params;
+        const _a = req.body, { newMenuItems, itemsMenuEdit, itemsMenuRemove } = _a, payload = __rest(_a, ["newMenuItems", "itemsMenuEdit", "itemsMenuRemove"]);
         const order = yield models_1.Order.findByPk(id);
-        yield (order === null || order === void 0 ? void 0 : order.update(payload));
+        yield (order === null || order === void 0 ? void 0 : order.update(Object.assign(Object.assign({}, payload), { done: !order.done })));
+        yield models_1.OrderDetail.bulkCreate(newMenuItems);
+        yield models_1.OrderDetail.destroy({
+            where: {
+                idOrden: id,
+                id_menu_item: itemsMenuRemove
+            }
+        });
+        for (const itemOrderUpdate of itemsMenuEdit) {
+            const item = yield models_1.OrderDetail.findOne({
+                where: {
+                    idOrden: id,
+                    id_menu_item: itemOrderUpdate.id_menu_item
+                }
+            });
+            yield (item === null || item === void 0 ? void 0 : item.update(Object.assign(Object.assign({}, itemOrderUpdate), { done: false })));
+        }
+        ;
+        const orderUpdated = yield models_1.Order.findOne({
+            where: {
+                idOrden: id,
+            },
+            attributes: OrderAttributes,
+            include: [{
+                    model: models_1.OrderDetail, attributes: OrderDetialAttributes, include: [{
+                            model: models_1.MenuItem, attributes: menuItemAttributes
+                        }]
+                }, {
+                    model: models_1.Employee,
+                    attributes: employeeAttributes
+                }, {
+                    model: models_1.Table,
+                    attributes: tableAttributes
+                }]
+        });
         return res.json({
             ok: true,
-            order
+            order: orderUpdated
         });
     }
     catch (error) {

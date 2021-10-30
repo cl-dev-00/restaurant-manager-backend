@@ -98,6 +98,69 @@ router.put('/:id', [
         .withMessage('EL id del comercial es obligatorio')
         .isInt({ min: 1 })
         .withMessage('El id del comercial debe ser un numero entero positivo'),
+    check('newMenuItems')
+        .exists()
+        .withMessage('Los newMenuItems son obligatorios')
+        .isArray()
+        .withMessage('itemsMenuEdit debe ser un array'),
+    check('newMenuItems.*.id_menu_item')
+        .not().isEmpty()
+        .withMessage('El id_menu_item es obligatorio')
+        .isInt({ min: 1 })
+        .withMessage('El id_menu_item debe ser un entero positivo')
+        .custom(hasExistMenuItem),
+    check('newMenuItems.*.cantidad')
+        .not().isEmpty()
+        .withMessage('La cantidad es obligatorio')
+        .isInt({ min: 1 })
+        .withMessage('La cantidad debe ser un entero positivo'),
+    check('newMenuItems.*.importe')
+        .not().isEmpty()
+        .withMessage('El importe es obligatorio')
+        .isFloat()
+        .withMessage('El importe debe ser un numero flotante'),
+    check('newMenuItems.*.comentario')
+        .exists()
+        .withMessage('El comentario es obligatorio')
+        .isString()
+        .withMessage('El comentario debe ser una cadena de caracteres'),
+    check('itemsMenuEdit')
+        .exists()
+        .withMessage('Los itemsMenuEdit son obligatorios')
+        .isArray()
+        .withMessage('itemsMenuEdit debe ser un array'),
+    check('itemsMenuEdit.*.id_menu_item')
+        .not().isEmpty()
+        .withMessage('El id_menu_item es obligatorio')
+        .isInt({ min: 1 })
+        .withMessage('El id_menu_item debe ser un entero positivo')
+        .custom(hasExistMenuItem),
+    check('itemsMenuEdit.*.idOrden')
+        .not().isEmpty()
+        .withMessage('El idOrden es obligatorio')
+        .isInt({ min: 1 })
+        .withMessage('El idOrden debe ser un entero positivo')
+        .custom(hasExistOrder),
+    check('itemsMenuEdit.*.cantidad')
+        .not().isEmpty()
+        .withMessage('La cantidad es obligatorio')
+        .isInt({ min: 1 })
+        .withMessage('La cantidad debe ser un entero positivo'),
+    check('itemsMenuEdit.*.importe')
+        .not().isEmpty()
+        .withMessage('El importe es obligatorio')
+        .isFloat()
+        .withMessage('El importe debe ser un numero flotante'),
+    check('itemsMenuEdit.*.comentario')
+        .exists()
+        .withMessage('El comentario es obligatorio')
+        .isString()
+        .withMessage('El comentario debe ser una cadena de caracteres'),
+    check('itemsMenuRemove')
+        .exists()
+        .withMessage('Los itemsMenuRemove son obligatorios')
+        .isArray()
+        .withMessage('itemsMenuRemove debe ser un array'),
     validFields
 ], updateOrder);
 

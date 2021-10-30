@@ -18,7 +18,7 @@ const socketController = (socket: Socket, io: Server) => {
         // console.log('Se ha desconectado ' + socket.id)
     });
 
-    socket.on('/sockets/orders/newOrder', (payload) => sendOrder(io, room, payload, 'sendNewOrder'));
+    socket.on('/sockets/orders/sendOrderKitchroom', (payload) => sendOrder(io, room, payload, 'sendNewOrder'));
     
     socket.on('/sockets/orders/doneOrder', (payload) => sendOrder(io, room, payload, 'sendDoneOrder'));
 

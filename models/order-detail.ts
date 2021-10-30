@@ -71,7 +71,7 @@ OrderDetail.init({
     
 }, {
     modelName: 'order_detail',
-    timestamps: false,
+    timestamps: true,
     sequelize: sequelizeConnection,
     paranoid: true
 

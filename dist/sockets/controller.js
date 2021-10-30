@@ -9,7 +9,7 @@ const socketController = (socket, io) => {
     socket.join(room);
     socket.on('disconnect', () => {
     });
-    socket.on('/sockets/orders/newOrder', (payload) => (0, orders_1.sendOrder)(io, room, payload, 'sendNewOrder'));
+    socket.on('/sockets/orders/sendOrderKitchroom', (payload) => (0, orders_1.sendOrder)(io, room, payload, 'sendNewOrder'));
     socket.on('/sockets/orders/doneOrder', (payload) => (0, orders_1.sendOrder)(io, room, payload, 'sendDoneOrder'));
     socket.on('/sockets/order-details/changeDoneOrderDetail', order_detail_1.changeDoneOrderDetail);
     socket.on('/sockets/menu-items/update', (payload) => (0, menu_items_1.changeStateMenuItem)(io, room, payload));
