@@ -91,9 +91,7 @@ const deleteCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
     const { id } = req.params;
     try {
         const category = yield models_1.Category.findByPk(id);
-        yield (category === null || category === void 0 ? void 0 : category.destroy({
-            force: false
-        }));
+        yield (category === null || category === void 0 ? void 0 : category.destroy());
         return res.json({
             ok: true,
         });

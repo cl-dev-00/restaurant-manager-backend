@@ -32,7 +32,6 @@ router.post('/', [
 
 router.put('/:id', [
     check('id').custom(hasExistCategory),
-
     check('nombreCategoria').not().isEmpty().
     withMessage('El nombre es obligatorio').
     isLength({ min: 3 }).

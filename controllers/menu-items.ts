@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { Server } from "socket.io";
 
 import { MenuItem } from "../models";
+import Category from '../models/category';
+
+const attributesCategory: string[] = ['idCategoria', 'nombreCategoria'];
 
 // REST API
 
@@ -13,7 +16,8 @@ const getMenuItems = async (req: Request, res: Response): Promise<Response> => {
             where: {
                 idComercial: 1,
                 deletedAt: null
-            }
+            },
+            include: [{ model: Category, attributes: attributesCategory }]
         });
 
         return res.json({
@@ -70,7 +74,12 @@ const getMenuItem = async (req: Request, res: Response): Promise<Response> => {
 
     try {
 
-        const menuItem = await MenuItem.findByPk(id);
+        const menuItem = await MenuItem.findOne({
+            where: {
+                id_menu_item: id
+            },
+            include: [{ model: Category, attributes: attributesCategory }]
+        });
 
         return res.json({
             ok: true,
@@ -185,8 +194,6 @@ const deleteMenuItem = async (req: Request, res: Response): Promise<Response> =>
             ok: false,
         });
     }
-
-
 }
 
 // SOCKETS

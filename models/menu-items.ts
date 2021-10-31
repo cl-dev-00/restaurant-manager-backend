@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from '../db/connection';
+import Category from './category';
 
 interface MenuItemAttributes {
     id_menu_item: number,
@@ -78,9 +79,13 @@ MenuItem.init({
     },
 }, {
     modelName: 'menu_item',
-    timestamps: false,
+    timestamps: true,
     sequelize: sequelizeConnection,
     paranoid: true
 });
+
+MenuItem.belongsTo(Category, {
+    foreignKey: 'idCategoria'
+})
 
 export default MenuItem;

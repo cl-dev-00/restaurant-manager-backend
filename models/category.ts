@@ -33,7 +33,7 @@ Category.init({
   },
 }, {
   modelName: 'category',
-  timestamps: false,
+  timestamps: true,
   sequelize: sequelizeConnection,
   paranoid: true
 })

@@ -1,4 +1,4 @@
-import { Order, Commercial, Category, Employee, MenuItem, OrderDetail } from "../models";
+import { Order, Commercial, Category, Employee, MenuItem, OrderDetail, Table } from "../models";
 
 export const hasExistCategory = async (id: number) => {
 
@@ -55,6 +55,16 @@ export const hasExistComercial = async (idComercial: number) => {
 
     if(!commercial) {
         throw new Error('La sucursal no existe');
+    }
+
+}
+
+export const hasExistTable = async (idTable: number) => {
+
+    const table = await Table.findByPk(idTable);
+
+    if(!table) {
+        throw new Error('No existe la mesa');
     }
 
 }

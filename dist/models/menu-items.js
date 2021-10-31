@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const connection_1 = require("../db/connection");
+const category_1 = __importDefault(require("./category"));
 class MenuItem extends sequelize_1.Model {
 }
 MenuItem.init({
@@ -45,9 +49,12 @@ MenuItem.init({
     },
 }, {
     modelName: 'menu_item',
-    timestamps: false,
+    timestamps: true,
     sequelize: connection_1.sequelizeConnection,
     paranoid: true
+});
+MenuItem.belongsTo(category_1.default, {
+    foreignKey: 'idCategoria'
 });
 exports.default = MenuItem;
 //# sourceMappingURL=menu-items.js.map

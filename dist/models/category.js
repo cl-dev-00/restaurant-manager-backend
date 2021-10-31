@@ -16,7 +16,7 @@ Category.init({
     },
 }, {
     modelName: 'category',
-    timestamps: false,
+    timestamps: true,
     sequelize: connection_1.sequelizeConnection,
     paranoid: true
 });

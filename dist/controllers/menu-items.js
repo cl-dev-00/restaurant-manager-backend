@@ -8,16 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.changeStateMenuItem = exports.deleteMenuItem = exports.updateMenuItem = exports.createMenuItem = exports.getMenuItemsByCategory = exports.getMenuItem = exports.getMenuItemsAvailable = exports.getMenuItems = void 0;
 const models_1 = require("../models");
+const category_1 = __importDefault(require("../models/category"));
+const attributesCategory = ['idCategoria', 'nombreCategoria'];
 const getMenuItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const menuItems = yield models_1.MenuItem.findAll({
             where: {
                 idComercial: 1,
                 deletedAt: null
-            }
+            },
+            include: [{ model: category_1.default, attributes: attributesCategory }]
         });
         return res.json({
             ok: true,
@@ -63,7 +69,12 @@ exports.getMenuItemsAvailable = getMenuItemsAvailable;
 const getMenuItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const menuItem = yield models_1.MenuItem.findByPk(id);
+        const menuItem = yield models_1.MenuItem.findOne({
+            where: {
+                id_menu_item: id
+            },
+            include: [{ model: category_1.default, attributes: attributesCategory }]
+        });
         return res.json({
             ok: true,
             menuItem

@@ -96,9 +96,7 @@ const deleteCategory = async (req: Request, res: Response): Promise<Response> =>
     try {
         const category = await Category.findByPk(id);
 
-        await category?.destroy({
-            force: false
-        });
+        await category?.destroy();
 
         return res.json({
             ok: true,

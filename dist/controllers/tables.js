@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTable = exports.updateTable = exports.createTable = exports.getTable = exports.getTablesAvailable = exports.getTablesByComercial = void 0;
+exports.deleteTable = exports.updateTable = exports.createTable = exports.getTable = exports.getTablesAvailable = exports.getTables = void 0;
 const models_1 = require("../models");
-const getTablesByComercial = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getTables = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tables = yield models_1.Table.findAll({
             where: {
@@ -34,7 +34,7 @@ const getTablesByComercial = (req, res) => __awaiter(void 0, void 0, void 0, fun
         });
     }
 });
-exports.getTablesByComercial = getTablesByComercial;
+exports.getTables = getTables;
 const getTablesAvailable = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tables = yield models_1.Table.findAll({
@@ -114,7 +114,10 @@ const updateTable = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.updateTable = updateTable;
 const deleteTable = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
     try {
+        const table = yield models_1.Table.findByPk(id);
+        table === null || table === void 0 ? void 0 : table.destroy();
         return res.json({
             ok: true
         });

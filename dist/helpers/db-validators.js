@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hasExistComercial = exports.hasExistOrderDetail = exports.hasExistOrder = exports.hasExistEmployee = exports.hasExistMenuItem = exports.hasExistCategory = void 0;
+exports.hasExistTable = exports.hasExistComercial = exports.hasExistOrderDetail = exports.hasExistOrder = exports.hasExistEmployee = exports.hasExistMenuItem = exports.hasExistCategory = void 0;
 const models_1 = require("../models");
 const hasExistCategory = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const category = yield models_1.Category.findByPk(id);
@@ -53,4 +53,11 @@ const hasExistComercial = (idComercial) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.hasExistComercial = hasExistComercial;
+const hasExistTable = (idTable) => __awaiter(void 0, void 0, void 0, function* () {
+    const table = yield models_1.Table.findByPk(idTable);
+    if (!table) {
+        throw new Error('No existe la mesa');
+    }
+});
+exports.hasExistTable = hasExistTable;
 //# sourceMappingURL=db-validators.js.map
