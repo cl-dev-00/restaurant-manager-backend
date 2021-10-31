@@ -51,48 +51,6 @@ const getOrdersUndone = async (req: Request, res: Response): Promise<Response> =
 
 }
 
-const getOrdersWithoutPaying = async (req: Request, res: Response): Promise<Response> => {
-
-    try {
-
-        const Orders = await Order.findAll({
-            where: {
-                done: true,
-                pagado: false,
-                idComercial: 1,
-                deletedAt: null
-            },
-            attributes: OrderAttributes,
-            include: [{
-                model: OrderDetail, attributes: OrderDetialAttributes, include: [{
-                    model: MenuItem, attributes: menuItemAttributes
-                }]
-            }, {
-                model: Employee,
-                attributes: employeeAttributes
-            }, {
-                model: Table,
-                attributes: tableAttributes
-            }]
-        });
-
-        return res.json({
-            ok: true,
-            collection: {
-                hasItems: Orders.length > 0 ? true : false,
-                items: Orders,
-            }
-        });
-
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            ok: false
-        });
-    }
-
-}
-
 const getOrder = async (req: Request, res: Response): Promise<Response> => {
 
     const { id } = req.params;
@@ -270,6 +228,50 @@ const deleteOrder = async (req: Request, res: Response): Promise<Response> => {
 const sendOrder = (io: Server, room: string, payload: Order, action: string) => {
     io.to(room).emit(`/sockets/orders/${action}`, payload);
 }
+
+
+const getOrdersWithoutPaying = async () => {
+
+    try {
+
+        const Orders = await Order.findAll({
+            where: {
+                done: true,
+                pagado: false,
+                idComercial: 1,
+                deletedAt: null
+            },
+            attributes: OrderAttributes,
+            include: [{
+                model: OrderDetail, attributes: OrderDetialAttributes, include: [{
+                    model: MenuItem, attributes: menuItemAttributes
+                }]
+            }, {
+                model: Employee,
+                attributes: employeeAttributes
+            }, {
+                model: Table,
+                attributes: tableAttributes
+            }]
+        });
+
+        return {
+            ok: true,
+            collection: {
+                hasItems: Orders.length > 0 ? true : false,
+                items: Orders,
+            }
+        };
+
+    } catch (error) {
+        console.log(error)
+        return {
+            ok: false
+        };
+    }
+
+}
+
 
 export {
     getOrdersUndone,

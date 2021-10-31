@@ -3,7 +3,7 @@ import { check } from "express-validator";
 
 import {
     getOrdersUndone,
-    getOrdersWithoutPaying,
+    // getOrdersWithoutPaying,
     getOrder,
     createOrder,
     updateOrder,
@@ -17,8 +17,8 @@ const router: Router = Router();
 router.get('/undone', [
 ], getOrdersUndone)
 
-router.get('/without-paying', [
-], getOrdersWithoutPaying)
+// router.get('/without-paying', [
+// ], getOrdersWithoutPaying)
 
 router.get('/:id', [
     check('id').custom(hasExistOrder),

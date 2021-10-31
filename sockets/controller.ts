@@ -1,16 +1,18 @@
 import { Server, Socket } from "socket.io";
 import { changeStateMenuItem } from "../controllers/menu-items";
 import { changeDoneOrderDetail } from "../controllers/order-detail";
-import { sendOrder } from "../controllers/orders";
+import { getOrdersWithoutPaying, sendOrder } from "../controllers/orders";
 
 
-const socketController = (socket: Socket, io: Server) => {
+const socketController = async (socket: Socket, io: Server) => {
 
     // console.log('Se ha conectado ' + socket.id)
 
     const { idcomercial } = socket.handshake.headers;
 
     const room: string = (idcomercial as string);
+
+    const ordersWithoutPaying = await getOrdersWithoutPaying();
 
     socket.join(room);
     
@@ -25,6 +27,8 @@ const socketController = (socket: Socket, io: Server) => {
     socket.on('/sockets/order-details/changeDoneOrderDetail', changeDoneOrderDetail);
 
     socket.on('/sockets/menu-items/update', (payload) => changeStateMenuItem(io, room, payload));
+
+    io.to(room).emit('/sockets/orders/without-paying', ordersWithoutPaying);
 }
 
 export default socketController;

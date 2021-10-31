@@ -7,7 +7,6 @@ const db_validators_1 = require("../helpers/db-validators");
 const middlewares_1 = require("../middlewares");
 const router = (0, express_1.Router)();
 router.get('/undone', [], orders_1.getOrdersUndone);
-router.get('/without-paying', [], orders_1.getOrdersWithoutPaying);
 router.get('/:id', [
     (0, express_validator_1.check)('id').custom(db_validators_1.hasExistOrder),
     middlewares_1.validFields

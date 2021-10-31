@@ -64,44 +64,6 @@ const getOrdersUndone = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.getOrdersUndone = getOrdersUndone;
-const getOrdersWithoutPaying = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const Orders = yield models_1.Order.findAll({
-            where: {
-                done: true,
-                pagado: false,
-                idComercial: 1,
-                deletedAt: null
-            },
-            attributes: OrderAttributes,
-            include: [{
-                    model: models_1.OrderDetail, attributes: OrderDetialAttributes, include: [{
-                            model: models_1.MenuItem, attributes: menuItemAttributes
-                        }]
-                }, {
-                    model: models_1.Employee,
-                    attributes: employeeAttributes
-                }, {
-                    model: models_1.Table,
-                    attributes: tableAttributes
-                }]
-        });
-        return res.json({
-            ok: true,
-            collection: {
-                hasItems: Orders.length > 0 ? true : false,
-                items: Orders,
-            }
-        });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false
-        });
-    }
-});
-exports.getOrdersWithoutPaying = getOrdersWithoutPaying;
 const getOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
@@ -247,4 +209,42 @@ const sendOrder = (io, room, payload, action) => {
     io.to(room).emit(`/sockets/orders/${action}`, payload);
 };
 exports.sendOrder = sendOrder;
+const getOrdersWithoutPaying = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const Orders = yield models_1.Order.findAll({
+            where: {
+                done: true,
+                pagado: false,
+                idComercial: 1,
+                deletedAt: null
+            },
+            attributes: OrderAttributes,
+            include: [{
+                    model: models_1.OrderDetail, attributes: OrderDetialAttributes, include: [{
+                            model: models_1.MenuItem, attributes: menuItemAttributes
+                        }]
+                }, {
+                    model: models_1.Employee,
+                    attributes: employeeAttributes
+                }, {
+                    model: models_1.Table,
+                    attributes: tableAttributes
+                }]
+        });
+        return {
+            ok: true,
+            collection: {
+                hasItems: Orders.length > 0 ? true : false,
+                items: Orders,
+            }
+        };
+    }
+    catch (error) {
+        console.log(error);
+        return {
+            ok: false
+        };
+    }
+});
+exports.getOrdersWithoutPaying = getOrdersWithoutPaying;
 //# sourceMappingURL=orders.js.map
