@@ -3,7 +3,7 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-import { orders, categories, menuItems, orderDetails, tables, employees, roles } from '../routers';
+import { orders, categories, menuItems, tables, employees, roles, auth } from '../routers';
 import socketController from '../sockets/controller';
 
 export default class AppServer {
@@ -18,10 +18,10 @@ export default class AppServer {
     });
     private port: string = process.env.PORT || '4000';
     private paths = {
+        auth: '/api/auth',
         categories: '/api/categories',
         menuItems: '/api/menu-items',
-        accounts: '/api/orders',
-        orders: '/api/order-details',
+        orders: '/api/orders',
         tables: '/api/tables',
         employees: '/api/employees',
         roles: '/api/roles',
@@ -38,10 +38,10 @@ export default class AppServer {
     }
 
     private routers(): void {
+        this.app.use(this.paths.auth, auth);
         this.app.use(this.paths.categories, categories);
         this.app.use(this.paths.menuItems, menuItems);
-        this.app.use(this.paths.accounts, orders);
-        this.app.use(this.paths.orders, orderDetails);
+        this.app.use(this.paths.orders, orders);
         this.app.use(this.paths.tables, tables);
         this.app.use(this.paths.employees, employees);
         this.app.use(this.paths.roles, roles);

@@ -2,11 +2,11 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 import {
-    getOrdersUndone,
-    // getOrdersWithoutPaying,
+    getOrders,
     getOrder,
     createOrder,
     updateOrder,
+    changeState,
     deleteOrder,
 } from '../controllers/orders';
 import { hasExistOrder, hasExistMenuItem } from '../helpers/db-validators';
@@ -14,11 +14,8 @@ import { validFields } from "../middlewares";
 
 const router: Router = Router();
 
-router.get('/undone', [
-], getOrdersUndone)
-
-// router.get('/without-paying', [
-// ], getOrdersWithoutPaying)
+router.get('/', [
+], getOrders)
 
 router.get('/:id', [
     check('id').custom(hasExistOrder),
@@ -163,6 +160,11 @@ router.put('/:id', [
         .withMessage('itemsMenuRemove debe ser un array'),
     validFields
 ], updateOrder);
+
+router.put('/:id/changeState', [
+    check('id').custom(hasExistOrder),
+    validFields
+], changeState);
 
 router.delete('/:id', [
     check('id').custom(hasExistOrder),

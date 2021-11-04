@@ -8,6 +8,7 @@ const connection_1 = require("../db/connection");
 const employee_1 = __importDefault(require("./employee"));
 const order_detail_1 = __importDefault(require("./order-detail"));
 const table_1 = __importDefault(require("./table"));
+const order_state_1 = __importDefault(require("./order-state"));
 class Order extends sequelize_1.Model {
 }
 Order.init({
@@ -28,6 +29,10 @@ Order.init({
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: true,
     },
+    idOrdenEstado: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+    },
     nombreCliente: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
@@ -35,14 +40,6 @@ Order.init({
     fechaOrden: {
         type: sequelize_1.DataTypes.DATE,
         allowNull: false
-    },
-    done: {
-        type: sequelize_1.DataTypes.BOOLEAN,
-        allowNull: true
-    },
-    pagado: {
-        type: sequelize_1.DataTypes.BOOLEAN,
-        allowNull: true,
     },
 }, {
     modelName: 'order',
@@ -58,6 +55,9 @@ Order.belongsTo(employee_1.default, {
 });
 Order.belongsTo(table_1.default, {
     foreignKey: 'idMesa'
+});
+Order.belongsTo(order_state_1.default, {
+    foreignKey: 'idOrdenEstado'
 });
 exports.default = Order;
 //# sourceMappingURL=order.js.map

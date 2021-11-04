@@ -6,7 +6,7 @@ const orders_1 = require("../controllers/orders");
 const db_validators_1 = require("../helpers/db-validators");
 const middlewares_1 = require("../middlewares");
 const router = (0, express_1.Router)();
-router.get('/undone', [], orders_1.getOrdersUndone);
+router.get('/', [], orders_1.getOrders);
 router.get('/:id', [
     (0, express_validator_1.check)('id').custom(db_validators_1.hasExistOrder),
     middlewares_1.validFields
@@ -143,6 +143,10 @@ router.put('/:id', [
         .withMessage('itemsMenuRemove debe ser un array'),
     middlewares_1.validFields
 ], orders_1.updateOrder);
+router.put('/:id/changeState', [
+    (0, express_validator_1.check)('id').custom(db_validators_1.hasExistOrder),
+    middlewares_1.validFields
+], orders_1.changeState);
 router.delete('/:id', [
     (0, express_validator_1.check)('id').custom(db_validators_1.hasExistOrder),
     middlewares_1.validFields

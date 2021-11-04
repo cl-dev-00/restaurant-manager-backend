@@ -9,68 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changeDoneOrderDetail = exports.deleteOrderDetails = exports.createOrderDetails = exports.getOrderDetailByOrder = void 0;
+exports.changeDoneOrderDetail = void 0;
 const models_1 = require("../models");
-const getOrderDetailByOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    try {
-        const orders = yield models_1.OrderDetail.findAll({
-            where: {
-                idOrden: id,
-                deletedAt: null
-            }
-        });
-        return res.json({
-            ok: true,
-            collection: {
-                hasItems: orders.length > 0 ? true : false,
-                items: orders,
-            }
-        });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false
-        });
-    }
-});
-exports.getOrderDetailByOrder = getOrderDetailByOrder;
-const createOrderDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const payload = req.body;
-    try {
-        const orders = yield models_1.OrderDetail.bulkCreate(payload.orders);
-        return res.json({
-            ok: true,
-            collection: {
-                hasItems: orders.length > 0 ? true : false,
-                items: orders,
-            }
-        });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false
-        });
-    }
-});
-exports.createOrderDetails = createOrderDetails;
-const deleteOrderDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const payload = req.body;
-    try {
-        return res.json({
-            ok: true,
-        });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false
-        });
-    }
-});
-exports.deleteOrderDetails = deleteOrderDetails;
 const changeDoneOrderDetail = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const orderDetail = yield models_1.OrderDetail.findByPk(id);

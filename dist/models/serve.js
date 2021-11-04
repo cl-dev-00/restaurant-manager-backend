@@ -21,10 +21,10 @@ class AppServer {
         });
         this.port = process.env.PORT || '4000';
         this.paths = {
+            auth: '/api/auth',
             categories: '/api/categories',
             menuItems: '/api/menu-items',
-            accounts: '/api/orders',
-            orders: '/api/order-details',
+            orders: '/api/orders',
             tables: '/api/tables',
             employees: '/api/employees',
             roles: '/api/roles',
@@ -35,10 +35,10 @@ class AppServer {
         this.listen();
     }
     routers() {
+        this.app.use(this.paths.auth, routers_1.auth);
         this.app.use(this.paths.categories, routers_1.categories);
         this.app.use(this.paths.menuItems, routers_1.menuItems);
-        this.app.use(this.paths.accounts, routers_1.orders);
-        this.app.use(this.paths.orders, routers_1.orderDetails);
+        this.app.use(this.paths.orders, routers_1.orders);
         this.app.use(this.paths.tables, routers_1.tables);
         this.app.use(this.paths.employees, routers_1.employees);
         this.app.use(this.paths.roles, routers_1.roles);
