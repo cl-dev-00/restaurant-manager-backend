@@ -215,7 +215,6 @@ const updateOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.updateOrder = updateOrder;
 const changeState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
     const { id } = req.params;
     const nivel_usuario = req.headers.nivel_usuario;
     const nivel = parseInt(nivel_usuario) || 0;
@@ -261,11 +260,15 @@ const changeState = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 isCashier = true;
             }
         }
-        (_b = order) === null || _b === void 0 ? true : delete _b.employee.role.user_level;
-        yield (order === null || order === void 0 ? void 0 : order.update(Object.assign(Object.assign({}, order), { idOrdenEstado })));
+        yield (order === null || order === void 0 ? void 0 : order.update({
+            idOrdenEstado,
+        }));
+        const _b = order.dataValues, { employee } = _b, props = __rest(_b, ["employee"]);
+        const _c = employee.dataValues, { role } = _c, propsEmployee = __rest(_c, ["role"]);
+        const _d = role.dataValues, { user_level } = _d, propsRole = __rest(_d, ["user_level"]);
         return res.json({
             ok: true,
-            order,
+            order: Object.assign(Object.assign({}, props), { employee: Object.assign(Object.assign({}, propsEmployee), { role: Object.assign({}, propsRole) }) }),
             isCashier
         });
     }

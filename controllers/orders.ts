@@ -129,7 +129,7 @@ const createOrder = async (req: Request, res: Response): Promise<Response> => {
 
         delete payload.order_details;
 
-        const { idOrden }: Order = await Order.create({...payload, idOrdenEstado: 1});
+        const { idOrden }: Order = await Order.create({ ...payload, idOrdenEstado: 1 });
 
         payman_order_details = payman_order_details.map(({ ...props }) => ({
             ...props,
@@ -178,7 +178,7 @@ const updateOrder = async (req: Request, res: Response): Promise<Response> => {
         const { newMenuItems, itemsMenuEdit, itemsMenuRemove, ...payload } = req.body;
 
         const order = await Order.findByPk(id);
-        
+
         await order?.update({ ...payload, idOrdenEstado: 1 });
 
         await OrderDetail.bulkCreate(newMenuItems);
@@ -294,16 +294,28 @@ const changeState = async (req: Request, res: Response): Promise<Response> => {
 
         }
 
-        delete (order as any)?.employee.role.user_level;
-
         await order?.update({
-            ...order,
             idOrdenEstado,
         });
 
+        const { employee, ...props } = (order as any).dataValues;
+        const { role, ...propsEmployee } = employee.dataValues;
+        const { user_level, ...propsRole } = role.dataValues;
+
+        // const { employee: { role: { user_level } }, ...props } = (order as any).dataValues;
+
         return res.json({
             ok: true,
-            order,
+            order: {
+                ...props,
+                employee: {
+                    ...propsEmployee,
+                    role: {
+                        ...propsRole
+                    }
+                },
+
+            },
             isCashier
         });
 
