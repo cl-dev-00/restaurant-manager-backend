@@ -23,10 +23,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendOrder = exports.deleteOrder = exports.changeState = exports.updateOrder = exports.createOrder = exports.getOrder = exports.getOrders = void 0;
+exports.sendOrder = exports.deleteOrder = exports.changeState = exports.updateOrder = exports.createOrder = exports.getOrder = exports.getOrdersPaidout = exports.getOrders = void 0;
+const sequelize_1 = require("sequelize");
 const models_1 = require("../models");
 const user_level_1 = __importDefault(require("../models/user-level"));
-const OrderAttributes = ['idOrden', 'idComercial', 'nombreCliente', 'fechaOrden'];
+const OrderAttributes = ['idOrden', 'idComercial', 'nombreCliente', 'fechaOrden', 'importe', 'total'];
 const OrderDetialAttributes = ['idOrderDetail', 'cantidad', 'importe', 'comentario', 'done'];
 const menuItemAttributes = ['id_menu_item', "idCategoria", 'nombre_item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
 const employeeAttributes = ['idEmpleado', 'nombre', 'apellido'];
@@ -34,6 +35,14 @@ const tableAttributes = ['idMesa', 'numero'];
 const getOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const nivel_usuario = req.headers.nivel_usuario || '0';
     const nivel = parseInt(nivel_usuario);
+    const currentDate = req.headers['date-current'];
+    if (!currentDate) {
+        return res.status(400).json({
+            ok: false,
+        });
+    }
+    const startDate = currentDate + " 00:00:00";
+    const endDate = currentDate + " 23:59:59";
     let idOrdenEstado;
     switch (nivel) {
         case 3:
@@ -56,7 +65,10 @@ const getOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             where: {
                 idOrdenEstado,
                 idComercial: 1,
-                deletedAt: null
+                deletedAt: null,
+                fechaOrden: {
+                    [sequelize_1.Op.between]: [startDate, endDate]
+                }
             },
             attributes: OrderAttributes,
             include: [{
@@ -87,6 +99,41 @@ const getOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getOrders = getOrders;
+const getOrdersPaidout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const currentDate = req.headers['date-current'];
+    const startDate = currentDate + " 00:00:00";
+    const endDate = currentDate + " 23:59:59";
+    try {
+        const orders = yield models_1.Order.findAll({
+            where: {
+                idComercial: 1,
+                deletedAt: null,
+                idOrdenEstado: 4,
+                fechaOrden: {
+                    [sequelize_1.Op.between]: [startDate, endDate]
+                }
+            },
+        });
+        const items = orders.map((_a) => {
+            var _b = _a.dataValues, { fechaOrden } = _b, props = __rest(_b, ["fechaOrden"]);
+            return Object.assign(Object.assign({}, props), { fechaOrden: fechaOrden.toISOString().slice(0, 19).replace("T", " ").split(",") });
+        });
+        return res.json({
+            ok: true,
+            collection: {
+                hasItems: items.length > 0,
+                items,
+            }
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false
+        });
+    }
+});
+exports.getOrdersPaidout = getOrdersPaidout;
 const getOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
@@ -216,26 +263,27 @@ const updateOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.updateOrder = updateOrder;
 const changeState = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    const { importe, total } = req.body;
     const nivel_usuario = req.headers.nivel_usuario;
     const nivel = parseInt(nivel_usuario) || 0;
     let idOrdenEstado;
     let isCashier = false;
-    switch (nivel) {
-        case 3:
-            idOrdenEstado = 4;
-            break;
-        case 4:
-            idOrdenEstado = 3;
-            break;
-        case 5:
-            idOrdenEstado = 2;
-            break;
-        default:
-            return res.status(400).json({
-                ok: false,
-            });
-    }
     try {
+        switch (nivel) {
+            case 3:
+                idOrdenEstado = 4;
+                break;
+            case 4:
+                idOrdenEstado = 3;
+                break;
+            case 5:
+                idOrdenEstado = 2;
+                break;
+            default:
+                return res.status(400).json({
+                    ok: false,
+                });
+        }
         const order = yield models_1.Order.findOne({
             where: {
                 idOrden: id
@@ -256,12 +304,14 @@ const changeState = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
         if (nivel === 5 && order) {
             if (order.employee.role.user_level.nivel_usuario === 3) {
-                idOrdenEstado = 3;
+                idOrdenEstado = 4;
                 isCashier = true;
             }
         }
         yield (order === null || order === void 0 ? void 0 : order.update({
             idOrdenEstado,
+            importe,
+            total
         }));
         const _b = order.dataValues, { employee } = _b, props = __rest(_b, ["employee"]);
         const _c = employee.dataValues, { role } = _c, propsEmployee = __rest(_c, ["role"]);

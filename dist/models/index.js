@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserLevel = exports.OrderState = exports.Role = exports.Table = exports.Commercial = exports.Employee = exports.Order = exports.OrderDetail = exports.MenuItem = exports.Category = exports.AppServer = void 0;
+exports.BoxAction = exports.CashRegister = exports.UserLevel = exports.OrderState = exports.Role = exports.Table = exports.Commercial = exports.Employee = exports.Order = exports.OrderDetail = exports.MenuItem = exports.Category = exports.AppServer = void 0;
 const serve_1 = __importDefault(require("./serve"));
 exports.AppServer = serve_1.default;
 const category_1 = __importDefault(require("./category"));
@@ -26,4 +26,8 @@ const role_1 = __importDefault(require("./role"));
 exports.Role = role_1.default;
 const user_level_1 = __importDefault(require("./user-level"));
 exports.UserLevel = user_level_1.default;
+const CashRegister_1 = __importDefault(require("./CashRegister"));
+exports.CashRegister = CashRegister_1.default;
+const box_actions_1 = __importDefault(require("./box-actions"));
+exports.BoxAction = box_actions_1.default;
 //# sourceMappingURL=index.js.map

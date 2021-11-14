@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
+import { Op } from "sequelize";
 import { Server } from "socket.io";
 import { Order, Employee, MenuItem, OrderDetail, Table, Role } from "../models";
 import UserLevel from '../models/user-level';
 
-const OrderAttributes: string[] = ['idOrden', 'idComercial', 'nombreCliente', 'fechaOrden'];
+const OrderAttributes: string[] = ['idOrden', 'idComercial', 'nombreCliente', 'fechaOrden', 'importe', 'total'];
 const OrderDetialAttributes: string[] = ['idOrderDetail', 'cantidad', 'importe', 'comentario', 'done'];
 const menuItemAttributes: string[] = ['id_menu_item', "idCategoria", 'nombre_item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
 const employeeAttributes: string[] = ['idEmpleado', 'nombre', 'apellido'];
@@ -17,15 +18,20 @@ const getOrders = async (req: Request, res: Response): Promise<Response> => {
 
     const nivel: number = parseInt(nivel_usuario);
 
+    const currentDate = req.headers['date-current'];
+
+    if (!currentDate) {
+        return res.status(400).json({
+            ok: false,
+        });
+    }
+
+    const startDate: any = currentDate + " 00:00:00";
+    const endDate: any = currentDate + " 23:59:59";
+
     let idOrdenEstado: number;
 
     switch (nivel) {
-        // case 1:
-        //     idOrdenEstado = 1;
-        //     break;
-        // case 2:
-        //     idOrdenEstado = 2;
-        //     break;
         case 3:
             idOrdenEstado = 3;
             break;
@@ -48,7 +54,10 @@ const getOrders = async (req: Request, res: Response): Promise<Response> => {
             where: {
                 idOrdenEstado,
                 idComercial: 1,
-                deletedAt: null
+                deletedAt: null,
+                fechaOrden: {
+                    [Op.between]: [startDate, endDate]
+                }
             },
             attributes: OrderAttributes,
             include: [{
@@ -69,6 +78,50 @@ const getOrders = async (req: Request, res: Response): Promise<Response> => {
             collection: {
                 hasItems: Orders.length > 0 ? true : false,
                 items: Orders,
+            }
+        });
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            ok: false
+        });
+    }
+
+}
+
+const getOrdersPaidout = async (req: Request, res: Response): Promise<Response> => {
+
+    const currentDate = req.headers['date-current'];
+
+    const startDate: any = currentDate + " 00:00:00";
+    const endDate: any = currentDate + " 23:59:59";
+
+    try {
+
+        const orders = await Order.findAll({
+            where: {
+                idComercial: 1,
+                deletedAt: null,
+                idOrdenEstado: 4,
+                fechaOrden: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
+        });
+
+        const items = (orders as any).map(({ dataValues: { fechaOrden, ...props } }: any) => {
+            return {
+                ...props,
+                fechaOrden: fechaOrden.toISOString().slice(0, 19).replace("T", " ").split(","),
+            }
+        });
+
+        return res.json({
+            ok: true,
+            collection: {
+                hasItems: items.length > 0,
+                items,
             }
         });
 
@@ -239,6 +292,7 @@ const updateOrder = async (req: Request, res: Response): Promise<Response> => {
 const changeState = async (req: Request, res: Response): Promise<Response> => {
 
     const { id } = req.params;
+    const { importe, total } = req.body;
 
     const nivel_usuario: string = req.headers.nivel_usuario as string;
 
@@ -247,25 +301,25 @@ const changeState = async (req: Request, res: Response): Promise<Response> => {
     let idOrdenEstado: number;
     let isCashier = false;
 
-    switch (nivel) {
-        case 3:
-            idOrdenEstado = 4;
-            break;
-        case 4:
-            idOrdenEstado = 3;
-            break;
-        case 5:
-            idOrdenEstado = 2;
-            break;
-
-        default:
-            return res.status(400).json({
-                ok: false,
-            });
-    }
-
+    
     try {
-
+        switch (nivel) {
+            case 3:
+                idOrdenEstado = 4;
+                break;
+            case 4:
+                idOrdenEstado = 3;
+                break;
+            case 5:
+                idOrdenEstado = 2;
+                break;
+    
+            default:
+                return res.status(400).json({
+                    ok: false,
+                });
+        }
+        
         const order = await Order.findOne({
             where: {
                 idOrden: id
@@ -288,7 +342,7 @@ const changeState = async (req: Request, res: Response): Promise<Response> => {
         if (nivel === 5 && order) {
 
             if ((order as any).employee.role.user_level.nivel_usuario === 3) {
-                idOrdenEstado = 3;
+                idOrdenEstado = 4;
                 isCashier = true;
             }
 
@@ -296,6 +350,8 @@ const changeState = async (req: Request, res: Response): Promise<Response> => {
 
         await order?.update({
             idOrdenEstado,
+            importe,
+            total
         });
 
         const { employee, ...props } = (order as any).dataValues;
@@ -354,6 +410,7 @@ const sendOrder = (io: Server, room: string, payload: Order, action: string) => 
 
 export {
     getOrders,
+    getOrdersPaidout,
     getOrder,
     createOrder,
     updateOrder,

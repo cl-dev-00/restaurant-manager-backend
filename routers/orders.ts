@@ -3,6 +3,7 @@ import { check } from "express-validator";
 
 import {
     getOrders,
+    getOrdersPaidout,
     getOrder,
     createOrder,
     updateOrder,
@@ -16,6 +17,9 @@ const router: Router = Router();
 
 router.get('/', [
 ], getOrders)
+
+router.get('/paidout', [
+], getOrdersPaidout);
 
 router.get('/:id', [
     check('id').custom(hasExistOrder),
@@ -44,6 +48,11 @@ router.post('/', [
         .withMessage('EL id del comercial es obligatorio')
         .isInt({ min: 1 })
         .withMessage('El id del comercial debe ser un numero entero positivo'),
+    check('importe')
+        .not().isEmpty()
+        .withMessage('EL importe es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El importe debe ser un numero decimal positivo'),
     check('order_details')
         .not().isEmpty()
         .withMessage('Los order_details son obligatorios')
@@ -95,6 +104,11 @@ router.put('/:id', [
         .withMessage('EL id del comercial es obligatorio')
         .isInt({ min: 1 })
         .withMessage('El id del comercial debe ser un numero entero positivo'),
+    check('importe')
+        .not().isEmpty()
+        .withMessage('EL importe es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El importe debe ser un numero decimal positivo'),
     check('newMenuItems')
         .exists()
         .withMessage('Los newMenuItems son obligatorios')
@@ -163,6 +177,16 @@ router.put('/:id', [
 
 router.put('/:id/changeState', [
     check('id').custom(hasExistOrder),
+    check('importe')
+        .not().isEmpty()
+        .withMessage('EL importe es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El importe debe ser un numero decimal positivo'),
+    check('total')
+        .not().isEmpty()
+        .withMessage('El total es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El total debe ser un numero decimal positivo'),
     validFields
 ], changeState);
 

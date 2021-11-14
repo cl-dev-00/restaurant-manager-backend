@@ -5,6 +5,8 @@ import orders from './orders';
 import tables from './tables';
 import employees from './employees';
 import roles from './roles';
+import cashRegisters from './cash-registers';
+import boxActions from './box-actions';
 
 export {
     auth,
@@ -13,5 +15,7 @@ export {
     orders,
     tables,
     employees,
-    roles
+    roles,
+    cashRegisters,
+    boxActions,
 }

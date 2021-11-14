@@ -41,6 +41,14 @@ Order.init({
         type: sequelize_1.DataTypes.DATE,
         allowNull: false
     },
+    importe: {
+        type: sequelize_1.DataTypes.DOUBLE,
+        allowNull: true,
+    },
+    total: {
+        type: sequelize_1.DataTypes.DOUBLE,
+        allowNull: true,
+    },
 }, {
     modelName: 'order',
     timestamps: true,

@@ -13,13 +13,15 @@ interface OrderAttributes {
     idOrdenEstado: number,
     nombreCliente: string,
     fechaOrden: Date,
-
+    importe: number;
+    total: number;
+    
     deletedAt?: Date,
     updatedAt?: Date,
     createdAt?: Date,
 }
 
-interface OrderInput extends Optional<OrderAttributes, 'idOrden' | 'idOrdenEstado' > { }
+interface OrderInput extends Optional<OrderAttributes, 'idOrden' | 'idOrdenEstado'  | 'total' > { }
 
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
     public idOrden!: number;
@@ -31,7 +33,9 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
     public fechaOrden!: Date;
     public done!: boolean;
     public pagado!: boolean;
-
+    public importe!: number;
+    public total!: number;
+    
     public readonly deletedAt!: Date;
     public readonly updatedAt!: Date;
     public readonly createdAt!: Date;
@@ -66,6 +70,14 @@ Order.init({
     fechaOrden: {
         type: DataTypes.DATE,
         allowNull: false
+    },
+    importe: {
+        type: DataTypes.DOUBLE,
+        allowNull: true,
+    },
+    total: {
+        type: DataTypes.DOUBLE,
+        allowNull: true,
     },
 }, {
     modelName: 'order',

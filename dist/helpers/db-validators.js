@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hasExistTable = exports.hasExistComercial = exports.hasExistOrderDetail = exports.hasExistOrder = exports.hasExistEmployee = exports.hasExistMenuItem = exports.hasExistCategory = void 0;
+exports.hasExistCashRegisterByDate = exports.hasExistCashRegister = exports.hasExistTable = exports.hasExistComercial = exports.hasExistOrderDetail = exports.hasExistOrder = exports.hasExistEmployee = exports.hasExistMenuItem = exports.hasExistCategory = void 0;
 const models_1 = require("../models");
+const CashRegister_1 = __importDefault(require("../models/CashRegister"));
 const hasExistCategory = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const category = yield models_1.Category.findByPk(id);
     if (!category) {
@@ -60,4 +64,22 @@ const hasExistTable = (idTable) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.hasExistTable = hasExistTable;
+const hasExistCashRegister = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const cashRegister = yield CashRegister_1.default.findByPk(id);
+    if (!cashRegister) {
+        throw new Error('No existe el registro de caja');
+    }
+});
+exports.hasExistCashRegister = hasExistCashRegister;
+const hasExistCashRegisterByDate = (date) => __awaiter(void 0, void 0, void 0, function* () {
+    const cashRegister = yield CashRegister_1.default.findOne({
+        where: {
+            fecha: date
+        }
+    });
+    if (cashRegister) {
+        throw new Error('Esta caja de arqueo ya se cerro');
+    }
+});
+exports.hasExistCashRegisterByDate = hasExistCashRegisterByDate;
 //# sourceMappingURL=db-validators.js.map

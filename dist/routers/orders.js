@@ -7,6 +7,7 @@ const db_validators_1 = require("../helpers/db-validators");
 const middlewares_1 = require("../middlewares");
 const router = (0, express_1.Router)();
 router.get('/', [], orders_1.getOrders);
+router.get('/paidout', [], orders_1.getOrdersPaidout);
 router.get('/:id', [
     (0, express_validator_1.check)('id').custom(db_validators_1.hasExistOrder),
     middlewares_1.validFields
@@ -30,6 +31,11 @@ router.post('/', [
         .withMessage('EL id del comercial es obligatorio')
         .isInt({ min: 1 })
         .withMessage('El id del comercial debe ser un numero entero positivo'),
+    (0, express_validator_1.check)('importe')
+        .not().isEmpty()
+        .withMessage('EL importe es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El importe debe ser un numero decimal positivo'),
     (0, express_validator_1.check)('order_details')
         .not().isEmpty()
         .withMessage('Los order_details son obligatorios')
@@ -78,6 +84,11 @@ router.put('/:id', [
         .withMessage('EL id del comercial es obligatorio')
         .isInt({ min: 1 })
         .withMessage('El id del comercial debe ser un numero entero positivo'),
+    (0, express_validator_1.check)('importe')
+        .not().isEmpty()
+        .withMessage('EL importe es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El importe debe ser un numero decimal positivo'),
     (0, express_validator_1.check)('newMenuItems')
         .exists()
         .withMessage('Los newMenuItems son obligatorios')
@@ -145,6 +156,16 @@ router.put('/:id', [
 ], orders_1.updateOrder);
 router.put('/:id/changeState', [
     (0, express_validator_1.check)('id').custom(db_validators_1.hasExistOrder),
+    (0, express_validator_1.check)('importe')
+        .not().isEmpty()
+        .withMessage('EL importe es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El importe debe ser un numero decimal positivo'),
+    (0, express_validator_1.check)('total')
+        .not().isEmpty()
+        .withMessage('El total es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El total debe ser un numero decimal positivo'),
     middlewares_1.validFields
 ], orders_1.changeState);
 router.delete('/:id', [

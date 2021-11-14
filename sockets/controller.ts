@@ -24,6 +24,8 @@ const socketController = async (socket: Socket, io: Server) => {
     socket.on('/sockets/orders/doneOrder', (payload) => sendOrder(io, room, payload, 'sendDoneOrder'));
     
     socket.on('/sockets/orders/deliveryOrder', (payload) => sendOrder(io, room, payload, 'sendDeliveryOrder'));
+
+    socket.on('/sockets/orders/paidoutOrder', (payload) => sendOrder(io, room, payload, 'sendPaidoutOrder'));
     
     socket.on('/sockets/order-details/changeDoneOrderDetail', changeDoneOrderDetail);
     

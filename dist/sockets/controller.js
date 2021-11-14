@@ -21,6 +21,7 @@ const socketController = (socket, io) => __awaiter(void 0, void 0, void 0, funct
     socket.on('/sockets/orders/sendOrderKitchroom', (payload) => (0, orders_1.sendOrder)(io, room, payload, 'sendNewOrder'));
     socket.on('/sockets/orders/doneOrder', (payload) => (0, orders_1.sendOrder)(io, room, payload, 'sendDoneOrder'));
     socket.on('/sockets/orders/deliveryOrder', (payload) => (0, orders_1.sendOrder)(io, room, payload, 'sendDeliveryOrder'));
+    socket.on('/sockets/orders/paidoutOrder', (payload) => (0, orders_1.sendOrder)(io, room, payload, 'sendPaidoutOrder'));
     socket.on('/sockets/order-details/changeDoneOrderDetail', order_detail_1.changeDoneOrderDetail);
     socket.on('/sockets/menu-items/update', (payload) => (0, menu_items_1.changeStateMenuItem)(io, room, payload));
     socket.on('/sockets/orderState/update', (payload) => (0, menu_items_1.changeStateMenuItem)(io, room, payload));

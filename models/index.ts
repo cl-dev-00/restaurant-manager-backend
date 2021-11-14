@@ -9,6 +9,8 @@ import Commercial from "./commercial";
 import Table from "./table";
 import Role from './role';
 import UserLevel from './user-level';
+import CashRegister from './CashRegister';
+import BoxAction from "./box-actions";
 
 export {
     AppServer,
@@ -22,4 +24,6 @@ export {
     Role,
     OrderState,
     UserLevel,
+    CashRegister,
+    BoxAction,
 }
