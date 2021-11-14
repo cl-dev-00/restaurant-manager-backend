@@ -169,6 +169,7 @@ const getOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getOrder = getOrder;
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const payload = req.body;
+    let isCashier = false;
     try {
         let payman_order_details = [...payload.order_details];
         delete payload.order_details;
@@ -189,15 +190,22 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                         }]
                 }, {
                     model: models_1.Employee,
-                    attributes: employeeAttributes
+                    attributes: employeeAttributes,
+                    include: [{ model: models_1.Role, include: [{ model: user_level_1.default }] }],
                 }, {
                     model: models_1.Table,
                     attributes: tableAttributes
                 }]
         });
+        if (order.employee.role.user_level.nivel_usuario === 3) {
+            isCashier = true;
+        }
+        const _a = order.dataValues, { employee } = _a, props = __rest(_a, ["employee"]);
+        const _b = employee.dataValues, { role } = _b, propsEmployee = __rest(_b, ["role"]);
         return res.json({
             ok: true,
-            order
+            order: Object.assign(Object.assign({}, props), { employee: Object.assign({}, propsEmployee) }),
+            isCashier
         });
     }
     catch (error) {
@@ -211,7 +219,7 @@ exports.createOrder = createOrder;
 const updateOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const _a = req.body, { newMenuItems, itemsMenuEdit, itemsMenuRemove } = _a, payload = __rest(_a, ["newMenuItems", "itemsMenuEdit", "itemsMenuRemove"]);
+        const _c = req.body, { newMenuItems, itemsMenuEdit, itemsMenuRemove } = _c, payload = __rest(_c, ["newMenuItems", "itemsMenuEdit", "itemsMenuRemove"]);
         const order = yield models_1.Order.findByPk(id);
         yield (order === null || order === void 0 ? void 0 : order.update(Object.assign(Object.assign({}, payload), { idOrdenEstado: 1 })));
         yield models_1.OrderDetail.bulkCreate(newMenuItems);
@@ -311,11 +319,11 @@ const changeState = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         yield (order === null || order === void 0 ? void 0 : order.update({
             idOrdenEstado,
             importe,
-            total
+            total,
         }));
-        const _b = order.dataValues, { employee } = _b, props = __rest(_b, ["employee"]);
-        const _c = employee.dataValues, { role } = _c, propsEmployee = __rest(_c, ["role"]);
-        const _d = role.dataValues, { user_level } = _d, propsRole = __rest(_d, ["user_level"]);
+        const _d = order.dataValues, { employee } = _d, props = __rest(_d, ["employee"]);
+        const _e = employee.dataValues, { role } = _e, propsEmployee = __rest(_e, ["role"]);
+        const _f = role.dataValues, { user_level } = _f, propsRole = __rest(_f, ["user_level"]);
         return res.json({
             ok: true,
             order: Object.assign(Object.assign({}, props), { employee: Object.assign(Object.assign({}, propsEmployee), { role: Object.assign({}, propsRole) }) }),

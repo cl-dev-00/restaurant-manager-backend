@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { generateJWT } from '../helpers/generate-jwt';
-import { Employee, Role, UserLevel } from '../models';
+import { Commercial, Employee, Role, UserLevel } from '../models';
 import bcrypt from 'bcrypt';
 
 const employeeAttributes: string[] = ['idEmpleado', 'idComercial', 'nombre', 'apellido', 'username', 'password'];
 const roleAttributes: string[] = ['nombreRol'];
 const userLevelAttributes: string[] = ['nivel_usuario'];
+const commercialAttributes: string[] = ['nombre', 'ubicacion', 'telefono'];
 
 const loginEmployee = async (req: Request, res: Response): Promise<Response> => {
 
@@ -21,7 +22,10 @@ const loginEmployee = async (req: Request, res: Response): Promise<Response> => 
                 model: Role, attributes: roleAttributes, include: [
                     { model: UserLevel, attributes: userLevelAttributes }
                 ]
-            }]
+            }, {
+                model: Commercial, attributes: commercialAttributes
+            }],
+
         });
 
 

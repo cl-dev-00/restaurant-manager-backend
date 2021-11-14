@@ -30,6 +30,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const employeeAttributes = ['idEmpleado', 'idComercial', 'nombre', 'apellido', 'username', 'password'];
 const roleAttributes = ['nombreRol'];
 const userLevelAttributes = ['nivel_usuario'];
+const commercialAttributes = ['nombre', 'ubicacion', 'telefono'];
 const loginEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password: passwordInput } = req.body;
     try {
@@ -42,7 +43,9 @@ const loginEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                     model: models_1.Role, attributes: roleAttributes, include: [
                         { model: models_1.UserLevel, attributes: userLevelAttributes }
                     ]
-                }]
+                }, {
+                    model: models_1.Commercial, attributes: commercialAttributes
+                }],
         });
         if (!employee) {
             return res.status(400).json({

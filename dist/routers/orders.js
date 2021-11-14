@@ -21,6 +21,11 @@ router.post('/', [
     (0, express_validator_1.check)('fechaOrden')
         .not().isEmpty()
         .withMessage('La fecha de la orden es obligatorio'),
+    (0, express_validator_1.check)('total')
+        .not().isEmpty()
+        .withMessage('El total es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El total debe ser un numero decimal positivo'),
     (0, express_validator_1.check)('idEmpleado')
         .not().isEmpty()
         .withMessage('EL id del empleado es obligatorio')
@@ -74,6 +79,11 @@ router.put('/:id', [
     (0, express_validator_1.check)('fechaOrden')
         .not().isEmpty()
         .withMessage('La fecha de la cuenta es obligatorio'),
+    (0, express_validator_1.check)('total')
+        .not().isEmpty()
+        .withMessage('El total es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El total debe ser un numero decimal positivo'),
     (0, express_validator_1.check)('idEmpleado')
         .not().isEmpty()
         .withMessage('EL id del empleado es  obligatorio')
@@ -161,11 +171,6 @@ router.put('/:id/changeState', [
         .withMessage('EL importe es obligatorio')
         .isFloat({ min: 0 })
         .withMessage('El importe debe ser un numero decimal positivo'),
-    (0, express_validator_1.check)('total')
-        .not().isEmpty()
-        .withMessage('El total es obligatorio')
-        .isFloat({ min: 0 })
-        .withMessage('El total debe ser un numero decimal positivo'),
     middlewares_1.validFields
 ], orders_1.changeState);
 router.delete('/:id', [

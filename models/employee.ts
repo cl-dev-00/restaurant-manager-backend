@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 
 import { sequelizeConnection } from "../db/connection";
 import Role from './role';
+import Commercial from './commercial';
 
 interface EmployeeAttributes {
     idEmpleado: number,
@@ -101,6 +102,10 @@ Employee.init({
     sequelize: sequelizeConnection,
     paranoid: true,
 })
+
+Employee.belongsTo(Commercial, {
+    foreignKey: 'idComercial'
+});
 
 Employee.belongsTo(Role, {
     foreignKey: 'idRol'

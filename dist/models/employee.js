@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const connection_1 = require("../db/connection");
 const role_1 = __importDefault(require("./role"));
+const commercial_1 = __importDefault(require("./commercial"));
 class Employee extends sequelize_1.Model {
 }
 Employee.init({
@@ -63,6 +64,9 @@ Employee.init({
     timestamps: true,
     sequelize: connection_1.sequelizeConnection,
     paranoid: true,
+});
+Employee.belongsTo(commercial_1.default, {
+    foreignKey: 'idComercial'
 });
 Employee.belongsTo(role_1.default, {
     foreignKey: 'idRol'

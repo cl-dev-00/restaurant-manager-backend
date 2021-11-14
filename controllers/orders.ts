@@ -175,6 +175,7 @@ const getOrder = async (req: Request, res: Response): Promise<Response> => {
 const createOrder = async (req: Request, res: Response): Promise<Response> => {
 
     const payload = req.body;
+    let isCashier: boolean = false;
 
     try {
 
@@ -202,17 +203,29 @@ const createOrder = async (req: Request, res: Response): Promise<Response> => {
                 }]
             }, {
                 model: Employee,
-                attributes: employeeAttributes
+                attributes: employeeAttributes,
+                include: [{ model: Role, include: [{ model: UserLevel }] }],
             }, {
                 model: Table,
                 attributes: tableAttributes
             }]
         });
 
+        if ((order as any).employee.role.user_level.nivel_usuario === 3) {
+            isCashier = true;
+        }
+
+        const { employee, ...props } = (order as any).dataValues;
+        const { role, ...propsEmployee } = employee.dataValues;
+
 
         return res.json({
             ok: true,
-            order
+            order: {
+                ...props,
+                employee: { ...propsEmployee }
+            },
+            isCashier
         });
 
     } catch (error) {
@@ -301,7 +314,7 @@ const changeState = async (req: Request, res: Response): Promise<Response> => {
     let idOrdenEstado: number;
     let isCashier = false;
 
-    
+
     try {
         switch (nivel) {
             case 3:
@@ -313,13 +326,13 @@ const changeState = async (req: Request, res: Response): Promise<Response> => {
             case 5:
                 idOrdenEstado = 2;
                 break;
-    
+
             default:
                 return res.status(400).json({
                     ok: false,
                 });
         }
-        
+
         const order = await Order.findOne({
             where: {
                 idOrden: id
@@ -351,7 +364,7 @@ const changeState = async (req: Request, res: Response): Promise<Response> => {
         await order?.update({
             idOrdenEstado,
             importe,
-            total
+            total,
         });
 
         const { employee, ...props } = (order as any).dataValues;

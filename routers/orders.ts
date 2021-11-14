@@ -38,6 +38,11 @@ router.post('/', [
         .withMessage('La fecha de la orden es obligatorio'),
     // .isDate()
     // .withMessage('fechaOrden debe ser una fecha'),
+    check('total')
+        .not().isEmpty()
+        .withMessage('El total es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El total debe ser un numero decimal positivo'),
     check('idEmpleado')
         .not().isEmpty()
         .withMessage('EL id del empleado es obligatorio')
@@ -94,6 +99,11 @@ router.put('/:id', [
         .withMessage('La fecha de la cuenta es obligatorio'),
     // .isDate()
     // .withMessage('fechaOrden debe ser una fecha'),
+    check('total')
+        .not().isEmpty()
+        .withMessage('El total es obligatorio')
+        .isFloat({ min: 0 })
+        .withMessage('El total debe ser un numero decimal positivo'),
     check('idEmpleado')
         .not().isEmpty()
         .withMessage('EL id del empleado es  obligatorio')
@@ -182,11 +192,6 @@ router.put('/:id/changeState', [
         .withMessage('EL importe es obligatorio')
         .isFloat({ min: 0 })
         .withMessage('El importe debe ser un numero decimal positivo'),
-    check('total')
-        .not().isEmpty()
-        .withMessage('El total es obligatorio')
-        .isFloat({ min: 0 })
-        .withMessage('El total debe ser un numero decimal positivo'),
     validFields
 ], changeState);
 
