@@ -19,14 +19,10 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendOrder = exports.deleteOrder = exports.changeState = exports.updateOrder = exports.createOrder = exports.getOrder = exports.getOrdersPaidout = exports.getOrders = void 0;
 const sequelize_1 = require("sequelize");
 const models_1 = require("../models");
-const user_level_1 = __importDefault(require("../models/user-level"));
 const OrderAttributes = ['idOrden', 'idComercial', 'nombreCliente', 'fechaOrden', 'importe', 'total'];
 const OrderDetialAttributes = ['idOrderDetail', 'cantidad', 'importe', 'comentario', 'done'];
 const menuItemAttributes = ['id_menu_item', "idCategoria", 'nombre_item', 'precio', 'disponibilidad', 'detalles_item', 'descuento', 'url'];
@@ -191,7 +187,7 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 }, {
                     model: models_1.Employee,
                     attributes: employeeAttributes,
-                    include: [{ model: models_1.Role, include: [{ model: user_level_1.default }] }],
+                    include: [{ model: models_1.Role, include: [{ model: models_1.UserLevel }] }],
                 }, {
                     model: models_1.Table,
                     attributes: tableAttributes
@@ -304,7 +300,7 @@ const changeState = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 }, {
                     model: models_1.Employee,
                     attributes: employeeAttributes,
-                    include: [{ model: models_1.Role, include: [{ model: user_level_1.default }] }]
+                    include: [{ model: models_1.Role, include: [{ model: models_1.UserLevel }] }]
                 }, {
                     model: models_1.Table,
                     attributes: tableAttributes

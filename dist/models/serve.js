@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const http_1 = require("http");
 const socket_io_1 = require("socket.io");
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const routers_1 = require("../routers");
 const controller_1 = __importDefault(require("../sockets/controller"));
 class AppServer {
@@ -15,7 +16,7 @@ class AppServer {
         this.server = (0, http_1.createServer)(this.app);
         this.io = new socket_io_1.Server(this.server, {
             cors: {
-                origin: ['http://localhost:8080'],
+                origin: ['http://localhost:8080', 'http://localhost:4000', 'https://restaurant-manager-cl.herokuapp.com/'],
                 allowedHeaders: ['idComercial']
             }
         });
@@ -30,6 +31,7 @@ class AppServer {
             roles: '/api/roles',
             cashRegisters: '/api/cash-registers',
             boxActions: '/api/box-actions',
+            uploads: '/api/uploads',
         };
         this.middlewares();
         this.routers();
@@ -46,11 +48,17 @@ class AppServer {
         this.app.use(this.paths.roles, routers_1.roles);
         this.app.use(this.paths.cashRegisters, routers_1.cashRegisters);
         this.app.use(this.paths.boxActions, routers_1.boxActions);
+        this.app.use(this.paths.uploads, routers_1.uploads);
     }
     middlewares() {
         this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.static('public'));
         this.app.use(express_1.default.json());
+        this.app.use((0, express_fileupload_1.default)({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true,
+        }));
     }
     sockets() {
         this.io.on('connection', (socket) => (0, controller_1.default)(socket, this.io));

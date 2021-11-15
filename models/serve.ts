@@ -2,8 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import fileUpload from 'express-fileupload';
 
-import { orders, categories, menuItems, tables, employees, roles, auth, cashRegisters, boxActions } from '../routers';
+import { orders, categories, menuItems, tables, employees, roles, auth, cashRegisters, boxActions, uploads } from '../routers';
 import socketController from '../sockets/controller';
 
 export default class AppServer {
@@ -12,7 +13,7 @@ export default class AppServer {
     private server = createServer(this.app);
     private io: Server = new Server(this.server, {
         cors: {
-            origin: ['http://localhost:8080'],
+            origin: ['http://localhost:8080', 'http://localhost:4000', 'https://restaurant-manager-cl.herokuapp.com/'],
             allowedHeaders: ['idComercial']
         }
     });
@@ -27,6 +28,7 @@ export default class AppServer {
         roles: '/api/roles',
         cashRegisters: '/api/cash-registers',
         boxActions: '/api/box-actions',
+        uploads: '/api/uploads',
     }
 
     public constructor() {
@@ -49,12 +51,18 @@ export default class AppServer {
         this.app.use(this.paths.roles, roles);
         this.app.use(this.paths.cashRegisters, cashRegisters);
         this.app.use(this.paths.boxActions, boxActions);
+        this.app.use(this.paths.uploads, uploads);
     }
 
     private middlewares() {
         this.app.use(cors());
         this.app.use(express.static('public'));
         this.app.use(express.json());
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true,
+        }));
     }
 
     private sockets() {

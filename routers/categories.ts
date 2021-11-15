@@ -2,7 +2,7 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 import { validFields } from "../middlewares";
-import { hasExistCategory } from '../helpers';
+import { hasExistCategory } from '../helpers/db-validators';
 
 import {
     getCategories,

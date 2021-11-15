@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.boxActions = exports.cashRegisters = exports.roles = exports.employees = exports.tables = exports.orders = exports.menuItems = exports.categories = exports.auth = void 0;
+exports.uploads = exports.boxActions = exports.cashRegisters = exports.roles = exports.employees = exports.tables = exports.orders = exports.menuItems = exports.categories = exports.auth = void 0;
 const auth_1 = __importDefault(require("./auth"));
 exports.auth = auth_1.default;
 const categories_1 = __importDefault(require("./categories"));
@@ -22,4 +22,6 @@ const cash_registers_1 = __importDefault(require("./cash-registers"));
 exports.cashRegisters = cash_registers_1.default;
 const box_actions_1 = __importDefault(require("./box-actions"));
 exports.boxActions = box_actions_1.default;
+const uploads_1 = __importDefault(require("./uploads"));
+exports.uploads = uploads_1.default;
 //# sourceMappingURL=index.js.map

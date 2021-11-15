@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { Op } from "sequelize";
 import { Server } from "socket.io";
-import { Order, Employee, MenuItem, OrderDetail, Table, Role } from "../models";
-import UserLevel from '../models/user-level';
+import { Order, Employee, MenuItem, OrderDetail, Table, Role, UserLevel } from "../models";
 
 const OrderAttributes: string[] = ['idOrden', 'idComercial', 'nombreCliente', 'fechaOrden', 'importe', 'total'];
 const OrderDetialAttributes: string[] = ['idOrderDetail', 'cantidad', 'importe', 'comentario', 'done'];

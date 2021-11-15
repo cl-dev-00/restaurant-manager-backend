@@ -91,7 +91,12 @@ const updateEmployee = async (req: Request, res: Response): Promise<Response> =>
     
     try {
         
-        const employee = await Employee.findByPk(id);
+        const employee = await Employee.findOne({
+            where: {
+                idEmpleado: id
+            },
+            include: [{ model: Role, attributes: rolAttributes }],
+        });
         
         if(payload.password) {
             payload.password = bcrypt.hashSync(payload.password, saltRounds);

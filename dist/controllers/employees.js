@@ -87,7 +87,12 @@ const updateEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function*
     const { id } = req.params;
     const payload = req.body;
     try {
-        const employee = yield models_1.Employee.findByPk(id);
+        const employee = yield models_1.Employee.findOne({
+            where: {
+                idEmpleado: id
+            },
+            include: [{ model: models_1.Role, attributes: rolAttributes }],
+        });
         if (payload.password) {
             payload.password = bcrypt_1.default.hashSync(payload.password, saltRounds);
         }
